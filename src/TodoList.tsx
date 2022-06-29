@@ -19,11 +19,12 @@ type TodoListPropsType = {
 export const TodoList = (props: TodoListPropsType) => {
     const [title, setTitle] = useState('')
     const [error, setError] = useState <string | null> (null)
+    // Отрисовка тасок методом Map
     const reactTodolist = props.tasks.map(t => {
-        const onclickHandler = () => {
+        const onclickHandler = () => { // Функция-обработчик для вызова callback-функции удаления тасок
             props.removeTasks(t.id)
         }
-        const onChangeCheckedHandler = (e: ChangeEvent<HTMLInputElement>) => {
+        const onChangeCheckedHandler = (e: ChangeEvent<HTMLInputElement>) => { // Функция-обработчик для вызова callback-функции изменения чекеда
             props.changeChecked(t.id, e.currentTarget.checked)
         }
         return <li className={t.isDone ? 'is-done' : ''} key={t.id}>
@@ -34,6 +35,8 @@ export const TodoList = (props: TodoListPropsType) => {
             <button onClick={onclickHandler}>x</button>
         </li>
     })
+        //
+        // Функция-обработчик для вызова callback-функций изменения фильтров
     const onClickHandlerAll = () => {
         props.changeFilter('all')
     }
@@ -43,7 +46,8 @@ export const TodoList = (props: TodoListPropsType) => {
     const onClickHandlerActive = () => {
         props.changeFilter('active')
     }
-    const onClickHandlerAddTask = () => {
+        //
+    const onClickHandlerAddTask = () => { // Функция-обработчик для вызова callback-функции добавления новых тасок
         if (title.trim() === "") {
             setError('Title is required')
             return
@@ -51,10 +55,10 @@ export const TodoList = (props: TodoListPropsType) => {
         props.addTask(title.trim())
         setTitle('')
     }
-    const onChangeHandlerTitle = (e: ChangeEvent<HTMLInputElement>) => {
+    const onChangeHandlerTitle = (e: ChangeEvent<HTMLInputElement>) => { // Функция-обработчик для изменения title из импута в стейте
         setTitle(e.currentTarget.value)
     }
-    const onKeyPressHandlerEnter = (e: KeyboardEvent<HTMLInputElement>) => {
+    const onKeyPressHandlerEnter = (e: KeyboardEvent<HTMLInputElement>) => { // Функция-обработчик для вызова callback-функции добавления новых тасок при помощи нажатия кдлавиши Enter
         setError(null)
         if (e.key === 'Enter') {
             onClickHandlerAddTask()

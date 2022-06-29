@@ -12,22 +12,27 @@ function App() {
         {id: v1(), title: "Fish", isDone: true},
         {id: v1(), title: "Beer", isDone: false},
     ])
-    const removeTasks = (id: string) => {
+
+    const removeTasks = (id: string) => { // Удаление таски
         let filterTasks = tasks.filter(t => t.id !== id)
         setTasks(filterTasks)
     }
-    const addTask = (title: string) => {
+
+    const addTask = (title: string) => {  // Добавление таски
         const NewTask = {id: v1(), title: title, isDone: false}
         setTasks([NewTask, ...tasks])
     }
 
-    const changeChecked = (id: string, isDone: boolean) => {
+    const changeChecked = (id: string, isDone: boolean) => {     // Изменение чекеда
         setTasks(tasks.map(t => t.id === id ? {...t, isDone: isDone} : t))
     }
+
+
     const [filter, setFilter] = useState<FilterType>('all')
-    const changeFilter = (filter: FilterType) => {
+    const changeFilter = (filter: FilterType) => { // Изменение значения фильтра в useState
         setFilter(filter)
     }
+    // Фильтрация по новому значению фильтра
     let changeTasks = tasks
     if (filter === 'completed') {
         changeTasks = tasks.filter(t => t.isDone)
