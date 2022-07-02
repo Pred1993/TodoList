@@ -13,7 +13,7 @@ type TodoListPropsType = {
     removeTasks: (todoListId: string, taskId: string) => void
     changeFilter: (todoListId: string, filter: FilterType) => void
     addTask: (todoListId: string, title: string) => void
-    changeChecked: (id: string, isDone: boolean) => void
+    changeChecked: (todoListId: string, taskId: string, isDone: boolean) => void
     filter: FilterType
     todoListId: string
 }
@@ -26,7 +26,7 @@ export const TodoList = (props: TodoListPropsType) => {
             props.removeTasks(props.todoListId, t.id)
         }
         const onChangeCheckedHandler = (e: ChangeEvent<HTMLInputElement>) => { // Функция-обработчик для вызова callback-функции изменения чекеда
-            props.changeChecked(t.id, e.currentTarget.checked)
+            props.changeChecked(props.todoListId, t.id, e.currentTarget.checked)
         }
         return <li className={t.isDone ? 'is-done' : ''} key={t.id}>
             <input type="checkbox" checked={t.isDone}

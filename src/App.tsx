@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import './App.css';
-import {TaskType, TodoList} from "./TodoList";
+import {TodoList} from "./TodoList";
 import {v1} from "uuid";
 
 export type FilterType = 'all' | 'completed' | 'active'
@@ -40,8 +40,8 @@ function App() {
         setTasks({...tasks, [todoListId]: [newTask, ...tasks[todoListId]]})
     }
 
-    const changeChecked = (id: string, isDone: boolean) => {     // Изменение чекеда
-        // setTasks(tasks.map(t => t.id === id ? {...t, isDone: isDone} : t))
+    const changeChecked = (todoListId: string, taskId: string, isDone: boolean) => {     // Изменение чекеда
+        setTasks({...tasks, [todoListId]: tasks[todoListId].map(td => td.id === taskId ? {...td, isDone: isDone} : td)})
     }
 
     const changeFilter = (todoListId: string, filter: FilterType) => { // Изменение значения фильтра в todoLists
