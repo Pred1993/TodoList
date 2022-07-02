@@ -10,7 +10,7 @@ export type TaskType = {
 type TodoListPropsType = {
     title: string
     tasks: Array<TaskType>
-    removeTasks: (id: string) => void
+    removeTasks: (todoListId: string, taskId: string) => void
     changeFilter: (todoListId: string, filter: FilterType) => void
     addTask: (title: string) => void
     changeChecked: (id: string, isDone: boolean) => void
@@ -23,7 +23,7 @@ export const TodoList = (props: TodoListPropsType) => {
     // Отрисовка тасок методом Map
     const reactTodolist = props.tasks.map(t => {
         const onclickHandler = () => { // Функция-обработчик для вызова callback-функции удаления тасок
-            props.removeTasks(t.id)
+            props.removeTasks(props.todoListId, t.id)
         }
         const onChangeCheckedHandler = (e: ChangeEvent<HTMLInputElement>) => { // Функция-обработчик для вызова callback-функции изменения чекеда
             props.changeChecked(t.id, e.currentTarget.checked)

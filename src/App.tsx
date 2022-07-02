@@ -31,9 +31,8 @@ function App() {
         ],
     })
 
-    const removeTasks = (id: string) => { // Удаление таски
-        // let filterTasks = tasks.filter(t => t.id !== id)
-        // setTasks(filterTasks)
+    const removeTasks = (todoListId: string, taskId: string) => { // Удаление таски
+        setTasks({...tasks, [todoListId]: tasks[todoListId].filter(td => td.id !== taskId)})
     }
 
     const addTask = (title: string) => {  // Добавление таски
