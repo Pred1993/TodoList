@@ -30,6 +30,10 @@ function App() {
             {id: v1(), title: "JS", isDone: false}
         ],
     })
+    const removeTodoList = (todoListId: string) => {
+        setTodoLists(todoLists.filter(td => td.id !== todoListId))
+        delete tasks[todoListId]
+    }
 
     const removeTasks = (todoListId: string, taskId: string) => { // Удаление таски
         setTasks({...tasks, [todoListId]: tasks[todoListId].filter(td => td.id !== taskId)})
@@ -47,8 +51,6 @@ function App() {
     const changeFilter = (todoListId: string, filter: FilterType) => { // Изменение значения фильтра в todoLists
         setTodoLists(todoLists.map(td => td.id === todoListId ? {...td, filter: filter} : td))
     }
-
-
     return (
         <div className="App">
             {todoLists.map(td => { // Отрисовка компонент todoLists по map
@@ -60,16 +62,18 @@ function App() {
                     changeTasks = tasks[td.id].filter(t => !t.isDone)
                 }
                 return <TodoList
-                        key={td.id}
-                        title={td.title}
-                              tasks={changeTasks}
-                              removeTasks={removeTasks}
-                              changeFilter={changeFilter}
-                              addTask={addTask}
-                              changeChecked={changeChecked}
-                              filter={td.filter}
-                              todoListId={td.id}
-                    />})}
+                    key={td.id}
+                    title={td.title}
+                    tasks={changeTasks}
+                    removeTasks={removeTasks}
+                    changeFilter={changeFilter}
+                    addTask={addTask}
+                    changeChecked={changeChecked}
+                    filter={td.filter}
+                    todoListId={td.id}
+                    removeTodoList={removeTodoList}
+                />
+            })}
         </div>
     );
 }

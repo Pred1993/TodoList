@@ -16,6 +16,7 @@ type TodoListPropsType = {
     changeChecked: (todoListId: string, taskId: string, isDone: boolean) => void
     filter: FilterType
     todoListId: string
+    removeTodoList: (todoListId: string) => void
 }
 export const TodoList = (props: TodoListPropsType) => {
     const [title, setTitle] = useState('')
@@ -59,15 +60,18 @@ export const TodoList = (props: TodoListPropsType) => {
     const onChangeHandlerTitle = (e: ChangeEvent<HTMLInputElement>) => { // Функция-обработчик для изменения title из импута в стейте
         setTitle(e.currentTarget.value)
     }
-    const onKeyPressHandlerEnter = (e: KeyboardEvent<HTMLInputElement>) => { // Функция-обработчик для вызова callback-функции добавления новых тасок при помощи нажатия кдлавиши Enter
+    const onKeyPressHandlerEnter = (e: KeyboardEvent<HTMLInputElement>) => { // Функция-обработчик для вызова callback-функции добавления новых тасок при помощи нажатия клавиши Enter
         setError(null)
         if (e.key === 'Enter') {
             onClickHandlerAddTask()
         }
     }
+    const onclickHandlerRemoveTodoList = () => {//Функция-обработчик для вызова callback-функции удаления todoList
+        props.removeTodoList(props.todoListId)
+    }
     return (
         <div>
-            <h3>{props.title}</h3>
+            <span>{props.title}</span><span><button onClick={onclickHandlerRemoveTodoList}>X</button></span>
             <div>
                 <input
                     className={ error ? 'error': ''}
