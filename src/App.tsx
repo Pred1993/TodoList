@@ -35,9 +35,9 @@ function App() {
         setTasks({...tasks, [todoListId]: tasks[todoListId].filter(td => td.id !== taskId)})
     }
 
-    const addTask = (title: string) => {  // Добавление таски
-        // const NewTask = {id: v1(), title: title, isDone: false}
-        // setTasks([NewTask, ...tasks])
+    const addTask = (todoListId: string, title: string) => {  // Добавление таски
+        const newTask = {id: v1(), title: title, isDone: false}
+        setTasks({...tasks, [todoListId]: [newTask, ...tasks[todoListId]]})
     }
 
     const changeChecked = (id: string, isDone: boolean) => {     // Изменение чекеда

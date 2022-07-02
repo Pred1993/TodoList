@@ -12,7 +12,7 @@ type TodoListPropsType = {
     tasks: Array<TaskType>
     removeTasks: (todoListId: string, taskId: string) => void
     changeFilter: (todoListId: string, filter: FilterType) => void
-    addTask: (title: string) => void
+    addTask: (todoListId: string, title: string) => void
     changeChecked: (id: string, isDone: boolean) => void
     filter: FilterType
     todoListId: string
@@ -53,7 +53,7 @@ export const TodoList = (props: TodoListPropsType) => {
             setError('Title is required')
             return
         }
-        props.addTask(title.trim())
+        props.addTask(props.todoListId, title.trim())
         setTitle('')
     }
     const onChangeHandlerTitle = (e: ChangeEvent<HTMLInputElement>) => { // Функция-обработчик для изменения title из импута в стейте
