@@ -11,10 +11,11 @@ type TodoListPropsType = {
     title: string
     tasks: Array<TaskType>
     removeTasks: (id: string) => void
-    changeFilter: (filter: FilterType) => void
+    changeFilter: (todoListId: string, filter: FilterType) => void
     addTask: (title: string) => void
     changeChecked: (id: string, isDone: boolean) => void
     filter: FilterType
+    todoListId: string
 }
 export const TodoList = (props: TodoListPropsType) => {
     const [title, setTitle] = useState('')
@@ -38,13 +39,13 @@ export const TodoList = (props: TodoListPropsType) => {
         //
         // Функция-обработчик для вызова callback-функций изменения фильтров
     const onClickHandlerAll = () => {
-        props.changeFilter('all')
+        props.changeFilter(props.todoListId, 'all')
     }
     const onClickHandlerCompleted = () => {
-        props.changeFilter('completed')
+        props.changeFilter(props.todoListId,'completed')
     }
     const onClickHandlerActive = () => {
-        props.changeFilter('active')
+        props.changeFilter(props.todoListId,'active')
     }
         //
     const onClickHandlerAddTask = () => { // Функция-обработчик для вызова callback-функции добавления новых тасок
