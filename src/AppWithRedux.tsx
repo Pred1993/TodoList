@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useCallback} from 'react';
 import './App.css';
 import {TaskType, TodoList} from "./TodoList";
 import AddItemForms from "./components/AddItemForms";
@@ -25,51 +25,51 @@ export type TasksStateType = {
 }
 
 function AppWithRedux() {
-
+    console.log('App is called')
     const dispatch = useDispatch()
     const todoLists = useSelector<AppRootReducerType, Array<TodoListType>>(state => state.todolist)
     const tasks = useSelector<AppRootReducerType, TasksStateType>(state => state.tasks)
 
-    const removeTodoList = (todoListId: string) => {// удаление TodoList
+    const removeTodoList = useCallback((todoListId: string) => {// удаление TodoList
         const action = removeTodolistAC(todoListId)
         dispatch(action)
-    }
+    }, [dispatch])
 
-    const removeTasks = (todoListId: string, taskId: string) => { // Удаление таски
+    const removeTasks =  useCallback((todoListId: string, taskId: string) => { // Удаление таски
         const action = removeTasksAC(todoListId, taskId)
         dispatch(action)
-    }
+    }, [dispatch])
 
-    const addTask = (todoListId: string, title: string) => {  // Добавление таски
+    const addTask =  useCallback((todoListId: string, title: string) => {  // Добавление таски
         const action = addTasksAC(todoListId, title)
         dispatch(action)
-    }
+    }, [dispatch])
     // Изменение значения title task за счёт превращения span в input
-    const changeTaskTitle = (todoListId: string, taskId: string, title: string) => {
+    const changeTaskTitle =  useCallback((todoListId: string, taskId: string, title: string) => {
         const action = changeTasksTitleAC(todoListId,taskId, title)
         dispatch(action)
-    }
+    }, [dispatch])
     // Изменение чекеда
-    const changeChecked = (todoListId: string, taskId: string, isDone: boolean) => {
+    const changeChecked =  useCallback((todoListId: string, taskId: string, isDone: boolean) => {
         const action = changeTasksStatusAC(todoListId, taskId, isDone)
         dispatch(action)
-    }
+    }, [dispatch])
 
-    const changeFilter = (todoListId: string, filter: FilterType) => { // Изменение значения фильтра в todoLists
+    const changeFilter = useCallback((todoListId: string, filter: FilterType) => { // Изменение значения фильтра в todoLists
         const action = changeTodolistFilterAC(todoListId, filter)
         dispatch(action)
-    }
+    }, [dispatch])
     //Функция изменения title todoList за счёт превращения span в input
-    const changeTitleTodoList = (todoListId: string, title: string) => {
+    const changeTitleTodoList =  useCallback((todoListId: string, title: string) => {
         const action = changeTodolistTitleAC(todoListId, title)
         dispatch(action)
-    }
+    }, [dispatch])
 
     // Создание нового тодолиста
-    const addTodoList = (title: string) => {
+    const addTodoList = useCallback((title: string) => {
         const action = addTodolistAC(title)
         dispatch(action)
-    }
+    }, [dispatch])
     return (
         <div className="App">
             <AppBar position="static">
@@ -90,21 +90,14 @@ function AppWithRedux() {
             </AppBar>
             <Container fixed>
                 <Grid container style={{ padding: '10px' }}>
-                    <AddItemForms callBack={(title) => addTodoList(title)}/>
+                    <AddItemForms callBack={addTodoList}/>
                 </Grid>
                 <Grid container spacing={3}>
                     {todoLists.map(td => { // Отрисовка компонент todoLists по map
-                        let changeTasks = tasks[td.id]  // Фильтрация по новому значению фильтра
-                        if (td.filter === 'completed') {
-                            changeTasks = tasks[td.id].filter(t => t.isDone)
-                        }
-                        if (td.filter === 'active') {
-                            changeTasks = tasks[td.id].filter(t => !t.isDone)
-                        }
-                        return <Grid item><Paper style={ { padding: '10px' } }><TodoList
+                        return <Grid key={td.id} item><Paper key={td.id} style={ { padding: '10px' } }><TodoList
                             key={td.id}
                             title={td.title}
-                            tasks={changeTasks}
+                            tasks={tasks[td.id]}
                             removeTasks={removeTasks}
                             changeFilter={changeFilter}
                             addTask={addTask}

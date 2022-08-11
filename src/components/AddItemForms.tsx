@@ -5,14 +5,17 @@ import {Send} from "@mui/icons-material";
 export type AddItemFormsPropsType = {
     callBack: (title: string) => void
 }
-const AddItemForms = (props: AddItemFormsPropsType) => {
+const AddItemForms = React.memo((props: AddItemFormsPropsType) => {
+    console.log('AddItemForms is called')
     const [title, setTitle] = useState('')
     const [error, setError] = useState<string | null>(null)
     const onChangeHandlerTitle = (e: ChangeEvent<HTMLInputElement>) => { // Функция-обработчик для изменения title из импута в стейте
         setTitle(e.currentTarget.value)
     }
     const onKeyPressHandlerEnter = (e: KeyboardEvent<HTMLInputElement>) => { // Функция-обработчик для вызова callback-функции добавления новых тасок при помощи нажатия клавиши Enter
-        setError(null)
+        if(error !== null) {
+            setError(null)
+        }
         if (e.key === 'Enter') {
             onClickHandlerAddTask()
         }
@@ -39,11 +42,11 @@ const AddItemForms = (props: AddItemFormsPropsType) => {
                        helperText={error}
                        size={'small'}
             />
-            <Button style={{maxHeight: '70px'}}onClick={onClickHandlerAddTask} variant="contained" endIcon={<Send />}>
+            <Button style={{maxHeight: '70px'}} onClick={onClickHandlerAddTask} variant="contained" endIcon={<Send />}>
                 Add
             </Button>
         </div>
     );
-};
+});
 
 export default AddItemForms;
