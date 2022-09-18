@@ -80,6 +80,6 @@ export const tasksAPI = {
         return instance.delete<ResponseType<{}>>(`todo-lists/${todolistId}/tasks/${taskId}`)
     },
     UpdateTasks(todolistId: string, taskId: string, dataUpdateRequest: dataUpdateRequestType) {
-        return instance.put<ResponseType<{}>>(`todo-lists/${todolistId}/tasks${taskId}`, dataUpdateRequest)
+        return instance.put<ResponseType<{}>>(`todo-lists/${todolistId}/tasks/${taskId}`, dataUpdateRequest)
     },
 }
