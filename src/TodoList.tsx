@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import './App.css';
 import AddItemForms from './components/AddItemForms';
 import EditableSpan from './components/EditableSpan';
@@ -7,6 +7,9 @@ import { Delete } from '@mui/icons-material';
 import Task from './components/Task';
 import { TaskStatuses, TaskType } from './api/todolist-api';
 import { FilterType } from './state/todolist-reducer';
+import { useDispatch } from 'react-redux';
+import { AppThunkType } from './state/store';
+import { fetchTasksTС } from './state/tasks-reducer';
 
 type TodoListPropsType = {
   title: string;
@@ -22,7 +25,11 @@ type TodoListPropsType = {
   changeTitleTodoList: (todoListId: string, title: string) => void;
 };
 export const TodoList = React.memo((props: TodoListPropsType) => {
-  console.log('Todolists is called');
+  const dispatch = useDispatch<AppThunkType>();
+
+  useEffect(() => {
+    dispatch(fetchTasksTС(props.todoListId));
+  }, []);
 
   let changeTasks = props.tasks; // Фильтрация по новому значению фильтра
   if (props.filter === 'completed') {

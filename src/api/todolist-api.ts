@@ -82,8 +82,8 @@ export type dataUpdateRequestType = {
 };
 
 export const tasksAPI = {
-  getTasks(todolistId: string, count: number, page: number) {
-    return instance.get<GetTasksResponseType>(`todo-lists/${todolistId}/tasks?count=${count}&page=${page}`);
+  getTasks(todolistId: string) {
+    return instance.get<GetTasksResponseType>(`todo-lists/${todolistId}/tasks`);
   },
   CreateTasks(todolistId: string, title: string) {
     return instance.post<ResponseType<{ item: TaskType }>>(`todo-lists/${todolistId}/tasks`, { title: title });

@@ -1,6 +1,7 @@
-import { combineReducers, compose, legacy_createStore } from 'redux';
-import { todolistsReducer } from './todolist-reducer';
-import { tasksReducer } from './tasks-reducer';
+import {applyMiddleware, combineReducers, compose, legacy_createStore} from 'redux';
+import {ActionTodolistType, todolistsReducer} from './todolist-reducer';
+import {ActionTaskType, tasksReducer} from './tasks-reducer';
+import thunk, {ThunkDispatch} from 'redux-thunk';
 
 declare global {
   interface Window {
@@ -10,6 +11,7 @@ declare global {
 
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 
+export type AppActionsType = ActionTodolistType | ActionTaskType;
 const rootReducer = combineReducers({
   todolist: todolistsReducer,
   tasks: tasksReducer,
@@ -17,7 +19,11 @@ const rootReducer = combineReducers({
 
 export type AppRootStateType = ReturnType<typeof rootReducer>;
 
-export const store = legacy_createStore(rootReducer, composeEnhancers());
+// export type AppThunk<ReturnType = void> = ThunkAction<ReturnType, AppRootStateType, unknown, AppActionsType>
+
+export type AppThunkType = ThunkDispatch<AppRootStateType, void, AppActionsType>;
+
+export const store = legacy_createStore(rootReducer, applyMiddleware(thunk));
 
 // @ts-ignore
 window.store = store;

@@ -5,12 +5,13 @@ import {
   changeTasksTitleAC,
   removeTasksAC,
   RemoveTasksActionType,
+  setTasksAC,
   tasksReducer,
 } from './tasks-reducer';
 import { changeTasksStatusAC } from './tasks-reducer';
 import { ChangeTasksStatusActionType } from './tasks-reducer';
 import { ChangeTasksTitleActionType } from './tasks-reducer';
-import { addTodolistAC, AddTodolistActionType, removeTodolistAC, SetTodolistAC } from './todolist-reducer';
+import { addTodolistAC, AddTodolistActionType, removeTodolistAC, setTodolistAC } from './todolist-reducer';
 import { TaskPriorities, TaskStatuses } from '../api/todolist-api';
 
 let startState: TasksStateType = {};
@@ -160,7 +161,7 @@ test('property with todolistId should be deleted', () => {
 });
 
 test('empty arrays should be added when we set todolists', () => {
-  const action = SetTodolistAC([
+  const action = setTodolistAC([
     { id: '1', title: 'What to learn', addedDate: '', order: 0 },
     { id: '2', title: 'What to buy', addedDate: '', order: 0 },
   ]);
@@ -172,4 +173,25 @@ test('empty arrays should be added when we set todolists', () => {
   expect(keys.length).toBe(2);
   expect(endState['1']).toStrictEqual([]);
   expect(endState['2']).toStrictEqual([]);
+});
+
+test('tasks should be added for todolist', () => {
+  const action = setTasksAC('todoListId2', [
+    {
+      id: '1',
+      title: 'HTML & CSS',
+      status: TaskStatuses.Completed,
+      todoListId: 'todoListId2',
+      description: '',
+      order: 0,
+      priority: TaskPriorities.Low,
+      addedDate: '',
+      deadline: '',
+      startDate: '',
+    },
+  ]);
+
+  const endState = tasksReducer({ todoListId1: [], todoListId2: [] }, action);
+
+  expect(endState['todoListId2'][0].id).toBe('1');
 });

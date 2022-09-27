@@ -116,14 +116,14 @@ export const UpdateTodolistTitle = () => {
 export const GetTasks = () => {
   const [state, setState] = useState<any>(null);
   const [todolistId, setTodolistId] = useState<any>('a08ee21f-155a-48d2-b958-d02abeb762ff');
-  const count = 10;
-  const page = 1;
+  // const count = 10;
+  // const page = 1;
   // useEffect(() => {
   //     // здесь мы будем делать запрос и ответ закидывать в стейт.
   //     // который в виде строки будем отображать в div-ке
   // }, [])
   const GetTasksHandler = () => {
-    tasksAPI.getTasks(todolistId, count, page).then((response) => {
+    tasksAPI.getTasks(todolistId).then((response) => {
       debugger;
       setState(response.data);
     });
