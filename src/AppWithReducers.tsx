@@ -1,6 +1,6 @@
 import React, { useReducer } from 'react';
 import './App.css';
-import { TaskType, TodoList } from './TodoList';
+import { TodoList } from './TodoList';
 import { v1 } from 'uuid';
 import AddItemForms from './components/AddItemForms';
 import { AppBar, Button, Container, Grid, IconButton, Paper, Toolbar, Typography } from '@mui/material';
@@ -9,6 +9,7 @@ import {
   addTodolistAC,
   changeTodolistFilterAC,
   changeTodolistTitleAC,
+  FilterType,
   removeTodolistAC,
   todolistsReducer,
 } from './state/todolist-reducer';
@@ -19,13 +20,8 @@ import {
   removeTasksAC,
   tasksReducer,
 } from './state/tasks-reducer';
+import { TaskPriorities, TaskStatuses, TaskType } from './api/todolist-api';
 
-export type FilterType = 'all' | 'completed' | 'active';
-export type TodoListType = {
-  id: string;
-  title: string;
-  filter: FilterType;
-};
 export type TasksStateType = {
   [key: string]: Array<TaskType>;
 };
@@ -34,20 +30,86 @@ function AppWithReducers() {
   const todoListId1 = v1();
   const todoListId2 = v1();
   const [todoLists, dispatchToTodoListsReducer] = useReducer(todolistsReducer, [
-    { id: todoListId1, title: 'What to eat', filter: 'all' },
-    { id: todoListId2, title: 'What to learn', filter: 'all' },
+    { id: todoListId1, title: 'What to eat', filter: 'all', addedDate: '', order: 0 },
+    { id: todoListId2, title: 'What to learn', filter: 'all', addedDate: '', order: 0 },
   ]);
 
   const [tasks, dispatchToTasksReducer] = useReducer(tasksReducer, {
     [todoListId1]: [
-      { id: v1(), title: 'Meat', isDone: true },
-      { id: v1(), title: 'Fish', isDone: true },
-      { id: v1(), title: 'Beer', isDone: false },
+      {
+        id: v1(),
+        title: 'Meat',
+        status: TaskStatuses.Completed,
+        todoListId: todoListId1,
+        description: '',
+        order: 0,
+        priority: TaskPriorities.Low,
+        addedDate: '',
+        deadline: '',
+        startDate: '',
+      },
+      {
+        id: v1(),
+        title: 'Fish',
+        status: TaskStatuses.Completed,
+        todoListId: todoListId1,
+        description: '',
+        order: 0,
+        priority: TaskPriorities.Low,
+        addedDate: '',
+        deadline: '',
+        startDate: '',
+      },
+      {
+        id: v1(),
+        title: 'Beer',
+        status: TaskStatuses.New,
+        todoListId: todoListId1,
+        description: '',
+        order: 0,
+        priority: TaskPriorities.Low,
+        addedDate: '',
+        deadline: '',
+        startDate: '',
+      },
     ],
     [todoListId2]: [
-      { id: v1(), title: 'HTML & CSS', isDone: true },
-      { id: v1(), title: 'React', isDone: true },
-      { id: v1(), title: 'JS', isDone: false },
+      {
+        id: v1(),
+        title: 'Meat',
+        status: TaskStatuses.Completed,
+        todoListId: todoListId2,
+        description: '',
+        order: 0,
+        priority: TaskPriorities.Low,
+        addedDate: '',
+        deadline: '',
+        startDate: '',
+      },
+      {
+        id: v1(),
+        title: 'Meat',
+        status: TaskStatuses.Completed,
+        todoListId: todoListId2,
+        description: '',
+        order: 0,
+        priority: TaskPriorities.Low,
+        addedDate: '',
+        deadline: '',
+        startDate: '',
+      },
+      {
+        id: v1(),
+        title: 'Beer',
+        status: TaskStatuses.New,
+        todoListId: todoListId2,
+        description: '',
+        order: 0,
+        priority: TaskPriorities.Low,
+        addedDate: '',
+        deadline: '',
+        startDate: '',
+      },
     ],
   });
   const removeTodoList = (todoListId: string) => {
@@ -74,8 +136,8 @@ function AppWithReducers() {
     dispatchToTasksReducer(action);
   };
   // Изменение чекеда
-  const changeChecked = (todoListId: string, taskId: string, isDone: boolean) => {
-    const action = changeTasksStatusAC(todoListId, taskId, isDone);
+  const changeChecked = (todoListId: string, taskId: string, status: TaskStatuses) => {
+    const action = changeTasksStatusAC(todoListId, taskId, status);
     dispatchToTasksReducer(action);
   };
 
@@ -118,10 +180,10 @@ function AppWithReducers() {
             // Отрисовка компонент todoLists по map
             let changeTasks = tasks[td.id]; // Фильтрация по новому значению фильтра
             if (td.filter === 'completed') {
-              changeTasks = tasks[td.id].filter((t) => t.isDone);
+              changeTasks = tasks[td.id].filter((t) => t.status === TaskStatuses.Completed);
             }
             if (td.filter === 'active') {
-              changeTasks = tasks[td.id].filter((t) => !t.isDone);
+              changeTasks = tasks[td.id].filter((t) => t.status === TaskStatuses.New);
             }
             return (
               <Grid item>

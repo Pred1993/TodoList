@@ -1,8 +1,7 @@
 import React from 'react';
-import {ComponentMeta, ComponentStory} from '@storybook/react';
-import {action} from "@storybook/addon-actions";
-import EditableSpan from "./EditableSpan";
-
+import { ComponentMeta, ComponentStory } from '@storybook/react';
+import { action } from '@storybook/addon-actions';
+import EditableSpan from './EditableSpan';
 
 // More on default export: https://storybook.js.org/docs/react/writing-stories/introduction#default-export
 export default {
@@ -11,11 +10,11 @@ export default {
   // More on argTypes: https://storybook.js.org/docs/react/api/argtypes
   argTypes: {
     onChange: {
-      description: 'callback'
+      description: 'callback',
     },
     title: {
-      defaultValue: 'dawdwad'
-    }
+      defaultValue: 'dawdwad',
+    },
   },
 } as ComponentMeta<typeof EditableSpan>;
 

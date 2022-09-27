@@ -1,24 +1,20 @@
 import React, { useCallback } from 'react';
 import './App.css';
-import { FilterType } from './App';
 import AddItemForms from './components/AddItemForms';
 import EditableSpan from './components/EditableSpan';
 import { Button, IconButton } from '@mui/material';
 import { Delete } from '@mui/icons-material';
 import Task from './components/Task';
+import { TaskStatuses, TaskType } from './api/todolist-api';
+import { FilterType } from './state/todolist-reducer';
 
-export type TaskType = {
-  id: string;
-  title: string;
-  isDone: boolean;
-};
 type TodoListPropsType = {
   title: string;
   tasks: Array<TaskType>;
   removeTasks: (todoListId: string, taskId: string) => void;
   changeFilter: (todoListId: string, filter: FilterType) => void;
   addTask: (todoListId: string, title: string) => void;
-  changeChecked: (todoListId: string, taskId: string, isDone: boolean) => void;
+  changeChecked: (todoListId: string, taskId: string, status: TaskStatuses) => void;
   filter: FilterType;
   todoListId: string;
   removeTodoList: (todoListId: string) => void;
@@ -30,10 +26,10 @@ export const TodoList = React.memo((props: TodoListPropsType) => {
 
   let changeTasks = props.tasks; // Фильтрация по новому значению фильтра
   if (props.filter === 'completed') {
-    changeTasks = props.tasks.filter((t) => t.isDone);
+    changeTasks = props.tasks.filter((t) => t.status === TaskStatuses.Completed);
   }
   if (props.filter === 'active') {
-    changeTasks = props.tasks.filter((t) => !t.isDone);
+    changeTasks = props.tasks.filter((t) => t.status === TaskStatuses.New);
   }
   // Отрисовка тасок методом Map
   const reactTodolist = changeTasks.map((t) => {
