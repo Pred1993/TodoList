@@ -106,15 +106,26 @@ test('Reducer has to remove the task', () => {
 });
 
 test('Reducer has to add the task', () => {
-  const action: AddTasksActionType = addTasksAC('todoListId2', 'Redux');
+  const action: AddTasksActionType = addTasksAC('todoListId2', {
+    id: '1',
+    title: 'Meat',
+    status: TaskStatuses.Completed,
+    todoListId: 'todoListId1',
+    description: '',
+    order: 0,
+    priority: TaskPriorities.Low,
+    addedDate: '',
+    deadline: '',
+    startDate: '',
+  });
 
   const endState = tasksReducer(startState, action);
 
   expect(endState['todoListId1'].length).toBe(3);
   expect(endState['todoListId2'].length).toBe(4);
   expect(endState['todoListId2'][0].id).toBeDefined();
-  expect(endState['todoListId2'][0].title).toBe('Redux');
-  expect(endState['todoListId2'][0].status).toBe(0);
+  expect(endState['todoListId2'][0].title).toBe('Meat');
+  expect(endState['todoListId2'][0].status).toBe(2);
 });
 
 test('status of specified task should be changed', () => {
@@ -136,7 +147,7 @@ test('title of specified task should be changed', () => {
 });
 
 test('new array should be added when new todolist is added', () => {
-  const action: AddTodolistActionType = addTodolistAC('new todolist');
+  const action: AddTodolistActionType = addTodolistAC({id: 'todoListId3', title: 'What to learn', addedDate: '', order: 0});
 
   const endState = tasksReducer(startState, action);
 

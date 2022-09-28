@@ -5,15 +5,22 @@ import AddItemForms from './components/AddItemForms';
 import { AppBar, Button, Container, Grid, IconButton, Paper, Toolbar, Typography } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import {
-  addTodolistAC,
-  changeTodolistFilterAC,
-  changeTodolistTitleAC,
-  fetchTodolistTС,
-  FilterType,
-  removeTodolistAC,
-  TodoListDomainType,
+    addTodolistAC, addTodolistTС,
+    changeTodolistFilterAC,
+    changeTodolistTitleAC, deleteTodolistTС,
+    fetchTodolistTС,
+    FilterType,
+    removeTodolistAC,
+    TodoListDomainType,
 } from './state/todolist-reducer';
-import { addTasksAC, changeTasksStatusAC, changeTasksTitleAC, removeTasksAC } from './state/tasks-reducer';
+import {
+    addTasksAC,
+    addTaskTC,
+    changeTasksStatusAC,
+    changeTasksTitleAC,
+    deleteTaskTC,
+    removeTasksAC
+} from './state/tasks-reducer';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppRootStateType, AppThunkType } from './state/store';
 import { tasksAPI, TaskStatuses, TaskType } from './api/todolist-api';
@@ -34,19 +41,15 @@ function AppWithRedux() {
   const removeTodoList = useCallback(
     (todoListId: string) => {
       // удаление TodoList
-      const action = removeTodolistAC(todoListId);
-      dispatch(action);
+      dispatch(deleteTodolistTС(todoListId))
     },
     [dispatch],
   );
 
   const removeTasks = useCallback(
-    (todoListId: string, taskId: string) => {
       // Удаление таски
-      tasksAPI.DeleteTasks(todoListId, taskId).then((response) => {
-        const action = removeTasksAC(todoListId, taskId);
-        dispatch(action);
-      });
+    (todoListId: string, taskId: string) => {
+     dispatch(deleteTaskTC(todoListId, taskId))
     },
     [dispatch],
   );
@@ -54,8 +57,7 @@ function AppWithRedux() {
   const addTask = useCallback(
     (todoListId: string, title: string) => {
       // Добавление таски
-      const action = addTasksAC(todoListId, title);
-      dispatch(action);
+      dispatch(addTaskTC(todoListId, title))
     },
     [dispatch],
   );
@@ -96,8 +98,7 @@ function AppWithRedux() {
   // Создание нового тодолиста
   const addTodoList = useCallback(
     (title: string) => {
-      const action = addTodolistAC(title);
-      dispatch(action);
+      dispatch(addTodolistTС(title))
     },
     [dispatch],
   );

@@ -57,19 +57,19 @@ export const tasksReducer = (state: TasksStateType = initialState, action: Actio
     case 'REMOVE-TASKS':
       return { ...state, [action.todolistId]: state[action.todolistId].filter((st) => st.id !== action.taskId) };
     case 'ADD-TASKS':
-      const newTask: TaskType = {
-        id: v1(),
-        title: action.newTaskTitle,
-        status: TaskStatuses.New,
-        todoListId: action.todolistId,
-        description: '',
-        order: 0,
-        priority: TaskPriorities.Low,
-        addedDate: '',
-        deadline: '',
-        startDate: '',
-      };
-      return { ...state, [action.todolistId]: [newTask, ...state[action.todolistId]] };
+      // const newTask: TaskType = {
+      //   id: v1(),
+      //   title: action.task.title,
+      //   status: TaskStatuses.New,
+      //   todoListId: action.todolistId,
+      //   description: '',
+      //   order: 0,
+      //   priority: TaskPriorities.Low,
+      //   addedDate: '',
+      //   deadline: '',
+      //   startDate: '',
+      // };
+      return { ...state, [action.todolistId]: [action.task, ...state[action.todolistId]] };
     case 'CHANGE-TASK':
       return {
         ...state,
@@ -95,7 +95,7 @@ export const tasksReducer = (state: TasksStateType = initialState, action: Actio
         ),
       };
     case 'ADD-TODOLIST':
-      return { ...state, [action.todolistId]: [] };
+      return { ...state, [action.todolist.id]: [] };
     case 'REMOVE-TODOLIST':
       const endState = { ...state };
       delete endState[action.id];
@@ -113,11 +113,11 @@ export const removeTasksAC = (todolistId: string, taskId: string) => {
   } as const;
 };
 
-export const addTasksAC = (todolistId: string, newTaskTitle: string) => {
+export const addTasksAC = (todolistId: string, task: TaskType) => {
   return {
     type: 'ADD-TASKS',
     todolistId: todolistId,
-    newTaskTitle: newTaskTitle,
+    task: task,
   } as const;
 };
 
@@ -154,3 +154,22 @@ export const fetchTasksTС = (todolistId: string) => {
     });
   };
 };
+
+export const deleteTaskTC = (todoListId: string, taskId: string) => {
+  return (dispatch: Dispatch) => {
+    // Удаление таски
+    tasksAPI.DeleteTasks(todoListId, taskId).then((response) => {
+      const action = removeTasksAC(todoListId, taskId);
+      dispatch(action);
+    });
+  }
+}
+
+export const addTaskTC = (todoListId: string, title: string) => {
+  return (dispatch: Dispatch) => {
+    tasksAPI.CreateTasks(todoListId, title).then((response) => {
+      const action = addTasksAC(todoListId, response.data.data.item);
+      dispatch(action);
+    });
+  }
+}
