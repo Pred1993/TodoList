@@ -5,25 +5,18 @@ import AddItemForms from './components/AddItemForms';
 import { AppBar, Button, Container, Grid, IconButton, Paper, Toolbar, Typography } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import {
-    addTodolistAC, addTodolistTС,
-    changeTodolistFilterAC,
-    changeTodolistTitleAC, deleteTodolistTС,
-    fetchTodolistTС,
-    FilterType,
-    removeTodolistAC,
-    TodoListDomainType,
+  addTodolistTС,
+  changeTodolistFilterAC,
+  changeTodolistTitleTС,
+  deleteTodolistTС,
+  fetchTodolistTС,
+  FilterType,
+  TodoListDomainType,
 } from './state/todolist-reducer';
-import {
-    addTasksAC,
-    addTaskTC,
-    changeTasksStatusAC,
-    changeTasksTitleAC,
-    deleteTaskTC,
-    removeTasksAC
-} from './state/tasks-reducer';
+import { addTaskTC, deleteTaskTC, updateTaskTC } from './state/tasks-reducer';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppRootStateType, AppThunkType } from './state/store';
-import { tasksAPI, TaskStatuses, TaskType } from './api/todolist-api';
+import { TaskStatuses, TaskType } from './api/todolist-api';
 
 export type TasksStateType = {
   [key: string]: Array<TaskType>;
@@ -41,15 +34,15 @@ function AppWithRedux() {
   const removeTodoList = useCallback(
     (todoListId: string) => {
       // удаление TodoList
-      dispatch(deleteTodolistTС(todoListId))
+      dispatch(deleteTodolistTС(todoListId));
     },
     [dispatch],
   );
 
   const removeTasks = useCallback(
-      // Удаление таски
+    // Удаление таски
     (todoListId: string, taskId: string) => {
-     dispatch(deleteTaskTC(todoListId, taskId))
+      dispatch(deleteTaskTC(todoListId, taskId));
     },
     [dispatch],
   );
@@ -57,23 +50,21 @@ function AppWithRedux() {
   const addTask = useCallback(
     (todoListId: string, title: string) => {
       // Добавление таски
-      dispatch(addTaskTC(todoListId, title))
+      dispatch(addTaskTC(todoListId, title));
     },
     [dispatch],
   );
   // Изменение значения title task за счёт превращения span в input
   const changeTaskTitle = useCallback(
     (todoListId: string, taskId: string, title: string) => {
-      const action = changeTasksTitleAC(todoListId, taskId, title);
-      dispatch(action);
+      dispatch(updateTaskTC(todoListId, taskId, { title: title }));
     },
     [dispatch],
   );
   // Изменение чекеда
   const changeChecked = useCallback(
     (todoListId: string, taskId: string, status: TaskStatuses) => {
-      const action = changeTasksStatusAC(todoListId, taskId, status);
-      dispatch(action);
+      dispatch(updateTaskTC(todoListId, taskId, { status: status }));
     },
     [dispatch],
   );
@@ -89,8 +80,7 @@ function AppWithRedux() {
   //Функция изменения title todoList за счёт превращения span в input
   const changeTitleTodoList = useCallback(
     (todoListId: string, title: string) => {
-      const action = changeTodolistTitleAC(todoListId, title);
-      dispatch(action);
+      dispatch(changeTodolistTitleTС(todoListId, title));
     },
     [dispatch],
   );
@@ -98,7 +88,7 @@ function AppWithRedux() {
   // Создание нового тодолиста
   const addTodoList = useCallback(
     (title: string) => {
-      dispatch(addTodolistTС(title))
+      dispatch(addTodolistTС(title));
     },
     [dispatch],
   );
