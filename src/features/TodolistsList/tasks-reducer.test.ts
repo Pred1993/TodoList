@@ -1,17 +1,8 @@
-import { TasksStateType } from '../App';
-import {
-  addTasksAC,
-  AddTasksActionType,
-  removeTasksAC,
-  RemoveTasksActionType,
-  setTasksAC,
-  tasksReducer,
-  updateTaskAC,
-  UpdateTasksActionType,
-} from './tasks-reducer';
+import { TasksStateType } from '../trash/App1!src/features/TodolistsList/tasks-reducer.test';
+import { addTasksAC, removeTasksAC, setTasksAC, tasksReducer, updateTaskAC } from './tasks-reducer';
 
-import { addTodolistAC, AddTodolistActionType, removeTodolistAC, setTodolistAC } from './todolist-reducer';
-import { TaskPriorities, TaskStatuses } from '../api/todolist-api';
+import { addTodolistAC, removeTodolistAC, setTodolistAC } from './todolist-reducer';
+import { TaskPriorities, TaskStatuses } from '../../api/todolist-api';
 
 let startState: TasksStateType = {};
 beforeEach(() => {
@@ -95,7 +86,7 @@ beforeEach(() => {
   };
 });
 test('Reducer has to remove the task', () => {
-  const action: RemoveTasksActionType = removeTasksAC('todoListId2', '2');
+  const action: ReturnType<typeof removeTasksAC> = removeTasksAC('todoListId2', '2');
 
   const endState = tasksReducer(startState, action);
 
@@ -105,7 +96,7 @@ test('Reducer has to remove the task', () => {
 });
 
 test('Reducer has to add the task', () => {
-  const action: AddTasksActionType = addTasksAC('todoListId2', {
+  const action: ReturnType<typeof addTasksAC> = addTasksAC('todoListId2', {
     id: '1',
     title: 'Meat',
     status: TaskStatuses.Completed,
@@ -128,7 +119,7 @@ test('Reducer has to add the task', () => {
 });
 
 test('status of specified task should be changed', () => {
-  const action: UpdateTasksActionType = updateTaskAC('todoListId2', '2', { status: 0 });
+  const action: ReturnType<typeof updateTaskAC> = updateTaskAC('todoListId2', '2', { status: 0 });
 
   const endState = tasksReducer(startState, action);
 
@@ -137,7 +128,7 @@ test('status of specified task should be changed', () => {
 });
 
 test('title of specified task should be changed', () => {
-  const action: UpdateTasksActionType = updateTaskAC('todoListId2', '2', { title: 'Redux' });
+  const action: ReturnType<typeof updateTaskAC> = updateTaskAC('todoListId2', '2', { title: 'Redux' });
 
   const endState = tasksReducer(startState, action);
 
@@ -146,7 +137,7 @@ test('title of specified task should be changed', () => {
 });
 
 test('new array should be added when new todolist is added', () => {
-  const action: AddTodolistActionType = addTodolistAC({
+  const action: ReturnType<typeof addTodolistAC> = addTodolistAC({
     id: 'todoListId3',
     title: 'What to learn',
     addedDate: '',

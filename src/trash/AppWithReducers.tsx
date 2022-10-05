@@ -1,26 +1,34 @@
-import React, { useState } from 'react';
-import './App.css';
-import { TodoList } from './TodoList';
+import React, { useReducer } from 'react';
+import '../app/App.css';
+import { TodoList } from '../features/TodolistsList/TodoList/TodoList';
 import { v1 } from 'uuid';
-import AddItemForms from './components/AddItemForms';
+import AddItemForms from '../components/AddItemForms/AddItemForms';
 import { AppBar, Button, Container, Grid, IconButton, Paper, Toolbar, Typography } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
-import { FilterType, TodoListDomainType } from './state/todolist-reducer';
-import { TaskPriorities, TaskStatuses, TaskType } from './api/todolist-api';
+import {
+  addTodolistAC,
+  changeTodolistFilterAC,
+  changeTodolistTitleAC,
+  FilterType,
+  removeTodolistAC,
+  todolistsReducer,
+} from '../features/TodolistsList/todolist-reducer';
+import { addTasksAC, removeTasksAC, tasksReducer, updateTaskAC } from '../features/TodolistsList/tasks-reducer';
+import { TaskPriorities, TaskStatuses, TaskType } from '../api/todolist-api';
 
 export type TasksStateType = {
   [key: string]: Array<TaskType>;
 };
 
-function App() {
+function AppWithReducers() {
   const todoListId1 = v1();
   const todoListId2 = v1();
-  const [todoLists, setTodoLists] = useState<Array<TodoListDomainType>>([
+  const [todoLists, dispatchToTodoListsReducer] = useReducer(todolistsReducer, [
     { id: todoListId1, title: 'What to eat', filter: 'all', addedDate: '', order: 0 },
     { id: todoListId2, title: 'What to learn', filter: 'all', addedDate: '', order: 0 },
   ]);
 
-  const [tasks, setTasks] = useState<TasksStateType>({
+  const [tasks, dispatchToTasksReducer] = useReducer(tasksReducer, {
     [todoListId1]: [
       {
         id: v1(),
@@ -74,7 +82,7 @@ function App() {
       },
       {
         id: v1(),
-        title: 'Fish',
+        title: 'Meat',
         status: TaskStatuses.Completed,
         todoListId: todoListId2,
         description: '',
@@ -100,21 +108,23 @@ function App() {
   });
   const removeTodoList = (todoListId: string) => {
     // удаление TodoList
-    setTodoLists(todoLists.filter((td) => td.id !== todoListId));
-    delete tasks[todoListId];
+    const action = removeTodolistAC(todoListId);
+    dispatchToTodoListsReducer(action);
+    dispatchToTasksReducer(action);
   };
 
   const removeTasks = (todoListId: string, taskId: string) => {
     // Удаление таски
-    setTasks({ ...tasks, [todoListId]: tasks[todoListId].filter((td) => td.id !== taskId) });
+    const action = removeTasksAC(todoListId, taskId);
+    dispatchToTasksReducer(action);
   };
 
   const addTask = (todoListId: string, title: string) => {
     // Добавление таски
-    const newTask = {
-      id: v1(),
+    const action = addTasksAC(todoListId, {
+      id: '1',
       title: title,
-      status: TaskStatuses.New,
+      status: TaskStatuses.Completed,
       todoListId: todoListId,
       description: '',
       order: 0,
@@ -122,35 +132,36 @@ function App() {
       addedDate: '',
       deadline: '',
       startDate: '',
-    };
-    setTasks({ ...tasks, [todoListId]: [newTask, ...tasks[todoListId]] });
+    });
+    dispatchToTasksReducer(action);
   };
   // Изменение значения title task за счёт превращения span в input
   const changeTaskTitle = (todoListId: string, taskId: string, title: string) => {
-    setTasks({ ...tasks, [todoListId]: tasks[todoListId].map((t) => (t.id === taskId ? { ...t, title: title } : t)) });
+    const action = updateTaskAC(todoListId, taskId, { title });
+    dispatchToTasksReducer(action);
   };
   // Изменение чекеда
   const changeChecked = (todoListId: string, taskId: string, status: TaskStatuses) => {
-    setTasks({
-      ...tasks,
-      [todoListId]: tasks[todoListId].map((td) => (td.id === taskId ? { ...td, status: status } : td)),
-    });
+    const action = updateTaskAC(todoListId, taskId, { status });
+    dispatchToTasksReducer(action);
   };
 
   const changeFilter = (todoListId: string, filter: FilterType) => {
     // Изменение значения фильтра в todoLists
-    setTodoLists(todoLists.map((td) => (td.id === todoListId ? { ...td, filter: filter } : td)));
+    const action = changeTodolistFilterAC(todoListId, filter);
+    dispatchToTodoListsReducer(action);
   };
   //Функция изменения title todoList за счёт превращения span в input
   const changeTitleTodoList = (todoListId: string, title: string) => {
-    setTodoLists(todoLists.map((td) => (td.id === todoListId ? { ...td, title: title } : td)));
+    const action = changeTodolistTitleAC(todoListId, title);
+    dispatchToTodoListsReducer(action);
   };
 
   // Создание нового тодолиста
   const addTodoList = (title: string) => {
-    const newTodoList: TodoListDomainType = { id: v1(), title: title, filter: 'all', addedDate: '', order: 0 };
-    setTodoLists([newTodoList, ...todoLists]);
-    setTasks({ ...tasks, [newTodoList.id]: [] });
+    const action = addTodolistAC({ id: 'todoListId3', title: title, addedDate: '', order: 0 });
+    dispatchToTodoListsReducer(action);
+    dispatchToTasksReducer(action);
   };
   return (
     <div className="App">
@@ -206,4 +217,4 @@ function App() {
   );
 }
 
-export default App;
+export default AppWithReducers;
