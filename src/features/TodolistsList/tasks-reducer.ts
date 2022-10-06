@@ -3,6 +3,7 @@ import { dataUpdateRequestType, tasksAPI, TaskType } from '../../api/todolist-ap
 import { Dispatch } from 'redux';
 import { AppRootStateType } from '../../app/store';
 import { TasksStateType } from './TodolistsList';
+import { setErrorAC, setStatusAC } from '../../app/app-reducer';
 
 const initialState: TasksStateType = {
   /*"todolistId1": [
@@ -61,6 +62,15 @@ export const tasksReducer = (state: TasksStateType = initialState, action: Actio
   }
 };
 // types
+export type dataUpdateDomainRequestType = {
+  title?: string;
+  description?: null | string;
+  status?: number;
+  priority?: number;
+  startDate?: null | string;
+  deadline?: null | string;
+};
+
 export type ActionTaskType =
   | ReturnType<typeof removeTasksAC>
   | ReturnType<typeof addTasksAC>
@@ -68,7 +78,9 @@ export type ActionTaskType =
   | ReturnType<typeof addTodolistAC>
   | ReturnType<typeof removeTodolistAC>
   | ReturnType<typeof setTodolistAC>
-  | ReturnType<typeof setTasksAC>;
+  | ReturnType<typeof setTasksAC>
+  | ReturnType<typeof setErrorAC>
+  | ReturnType<typeof setStatusAC>;
 
 // actions
 export const removeTasksAC = (todolistId: string, taskId: string) =>
@@ -97,37 +109,44 @@ export const setTasksAC = (todolistId: string, tasks: Array<TaskType>) =>
 
 // thunks
 export const fetchTasksTС = (todolistId: string) => (dispatch: Dispatch<ActionTaskType>) => {
+  dispatch(setStatusAC('loading'));
   tasksAPI.getTasks(todolistId).then((response) => {
     dispatch(setTasksAC(todolistId, response.data.items));
+    dispatch(setStatusAC('succeeded'));
   });
 };
 
 export const deleteTaskTC = (todoListId: string, taskId: string) => (dispatch: Dispatch<ActionTaskType>) => {
+  dispatch(setStatusAC('loading'));
   // Удаление таски
   tasksAPI.DeleteTasks(todoListId, taskId).then((response) => {
     const action = removeTasksAC(todoListId, taskId);
     dispatch(action);
+    dispatch(setStatusAC('succeeded'));
   });
 };
 
 export const addTaskTC = (todoListId: string, title: string) => (dispatch: Dispatch<ActionTaskType>) => {
+  dispatch(setStatusAC('loading'));
   tasksAPI.CreateTasks(todoListId, title).then((response) => {
-    const action = addTasksAC(todoListId, response.data.data.item);
-    dispatch(action);
+    if (response.data.resultCode === 0) {
+      const action = addTasksAC(todoListId, response.data.data.item);
+      dispatch(action);
+      dispatch(setStatusAC('succeeded'));
+    } else {
+      if (response.data.messages.length) {
+        dispatch(setErrorAC(response.data.messages[0]));
+      } else {
+        dispatch(setErrorAC('Some error occurred'));
+      }
+      dispatch(setStatusAC('failed'));
+    }
   });
-};
-
-export type dataUpdateDomainRequestType = {
-  title?: string;
-  description?: null | string;
-  status?: number;
-  priority?: number;
-  startDate?: null | string;
-  deadline?: null | string;
 };
 
 export const updateTaskTC = (todoListId: string, taskId: string, dataUpdateRequest: dataUpdateDomainRequestType) => {
   return (dispatch: Dispatch, getState: () => AppRootStateType) => {
+    dispatch(setStatusAC('loading'));
     const state = getState();
     const task = state.tasks[todoListId].find((t) => t.id === taskId); // дальше идет проверка в случае если таска не найдена
     if (task) {
@@ -143,6 +162,7 @@ export const updateTaskTC = (todoListId: string, taskId: string, dataUpdateReque
       tasksAPI.UpdateTasks(todoListId, taskId, model).then((response) => {
         const action = updateTaskAC(todoListId, taskId, dataUpdateRequest);
         dispatch(action);
+        dispatch(setStatusAC('succeeded'));
       });
     }
   };

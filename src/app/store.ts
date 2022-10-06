@@ -2,6 +2,7 @@ import { applyMiddleware, combineReducers, compose, legacy_createStore } from 'r
 import { ActionTodolistType, todolistsReducer } from '../features/TodolistsList/todolist-reducer';
 import { ActionTaskType, tasksReducer } from '../features/TodolistsList/tasks-reducer';
 import thunk, { ThunkDispatch } from 'redux-thunk';
+import { appReducer } from './app-reducer';
 
 declare global {
   interface Window {
@@ -15,6 +16,7 @@ export type AppActionsType = ActionTodolistType | ActionTaskType;
 const rootReducer = combineReducers({
   todolist: todolistsReducer,
   tasks: tasksReducer,
+  app: appReducer,
 });
 
 export type AppRootStateType = ReturnType<typeof rootReducer>;
