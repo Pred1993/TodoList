@@ -3,6 +3,7 @@ import { TextField } from '@mui/material';
 export type EditableSpanPropsType = {
   title: string;
   onChange: (title: string) => void;
+  disabled?: boolean;
 };
 const EditableSpan = React.memo((props: EditableSpanPropsType) => {
   console.log('EditableSpan is added');
@@ -21,6 +22,7 @@ const EditableSpan = React.memo((props: EditableSpanPropsType) => {
   };
   return editMode ? (
     <TextField
+      disabled={props.disabled}
       onBlur={onBlurHandler}
       onChange={onChangeHandler}
       type="text"

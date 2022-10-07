@@ -19,13 +19,19 @@ import { TodoList } from './TodoList/TodoList';
 export type TasksStateType = {
   [key: string]: Array<TaskType>;
 };
+type PropsType = {
+  demo?: boolean;
+};
 
-const TodolistsList = () => {
+const TodolistsList = ({ demo = false }: PropsType) => {
   const dispatch = useDispatch<AppThunkType>();
   const todoLists = useSelector<AppRootStateType, Array<TodoListDomainType>>((state) => state.todolist);
   const tasks = useSelector<AppRootStateType, TasksStateType>((state) => state.tasks);
 
   useEffect(() => {
+    if (demo) {
+      return;
+    }
     dispatch(fetchTodolistTС());
   }, []);
 
@@ -102,25 +108,23 @@ const TodolistsList = () => {
             <Grid key={td.id} item>
               <Paper key={td.id} style={{ padding: '10px' }}>
                 <TodoList
+                  todoList={td}
                   key={td.id}
-                  title={td.title}
                   tasks={tasks[td.id]}
                   removeTasks={removeTasks}
                   changeFilter={changeFilter}
                   addTask={addTask}
                   changeChecked={changeChecked}
-                  filter={td.filter}
-                  todoListId={td.id}
                   removeTodoList={removeTodoList}
                   changeTaskTitle={changeTaskTitle}
                   changeTitleTodoList={changeTitleTodoList}
+                  demo={demo}
                 />
               </Paper>
             </Grid>
           );
         })}
       </Grid>
-      );
     </>
   );
 };

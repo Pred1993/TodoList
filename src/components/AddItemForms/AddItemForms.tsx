@@ -4,6 +4,7 @@ import { Send } from '@mui/icons-material';
 
 export type AddItemFormsPropsType = {
   callBack: (title: string) => void;
+  disabled?: boolean;
 };
 const AddItemForms = React.memo((props: AddItemFormsPropsType) => {
   console.log('AddItemForms is called');
@@ -38,6 +39,7 @@ const AddItemForms = React.memo((props: AddItemFormsPropsType) => {
   return (
     <div>
       <TextField
+        disabled={props.disabled}
         error={!!error}
         value={title}
         onChange={onChangeHandlerTitle}
@@ -48,7 +50,13 @@ const AddItemForms = React.memo((props: AddItemFormsPropsType) => {
         helperText={error}
         size={'small'}
       />
-      <Button style={{ maxHeight: '70px' }} onClick={onClickHandlerAddTask} variant="contained" endIcon={<Send />}>
+      <Button
+        style={{ maxHeight: '70px' }}
+        onClick={onClickHandlerAddTask}
+        variant="contained"
+        endIcon={<Send />}
+        disabled={props.disabled}
+      >
         Add
       </Button>
     </div>
