@@ -36,6 +36,7 @@ TaskIsDoneStory.args = {
     addedDate: '',
     deadline: '',
     startDate: '',
+    entityStatus: 'idle',
   },
   todoListId: '1111',
 };
@@ -56,6 +57,7 @@ TaskIsNotDoneStory.args = {
     addedDate: '',
     deadline: '',
     startDate: '',
+    entityStatus: 'idle',
   },
   todoListId: '1111',
 };

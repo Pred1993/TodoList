@@ -33,6 +33,7 @@ const initialGlobalState = {
         addedDate: '',
         deadline: '',
         startDate: '',
+        entityStatus: 'idle',
       },
       {
         id: v1(),
@@ -45,6 +46,7 @@ const initialGlobalState = {
         addedDate: '',
         deadline: '',
         startDate: '',
+        entityStatus: 'idle',
       },
     ],
     ['todoListId2']: [
@@ -59,6 +61,7 @@ const initialGlobalState = {
         addedDate: '',
         deadline: '',
         startDate: '',
+        entityStatus: 'idle',
       },
       {
         id: v1(),
@@ -71,6 +74,7 @@ const initialGlobalState = {
         addedDate: '',
         deadline: '',
         startDate: '',
+        entityStatus: 'idle',
       },
     ],
   },

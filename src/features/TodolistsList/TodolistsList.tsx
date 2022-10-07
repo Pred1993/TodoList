@@ -11,13 +11,14 @@ import {
   TodoListDomainType,
 } from './todolist-reducer';
 import { addTaskTC, deleteTaskTC, updateTaskTC } from './tasks-reducer';
-import { TaskStatuses, TaskType } from '../../api/todolist-api';
+import { TaskDomainType, TaskStatuses } from '../../api/todolist-api';
 
 import { Grid, Paper } from '@mui/material';
 import AddItemForms from '../../components/AddItemForms/AddItemForms';
 import { TodoList } from './TodoList/TodoList';
+
 export type TasksStateType = {
-  [key: string]: Array<TaskType>;
+  [key: string]: Array<TaskDomainType>;
 };
 type PropsType = {
   demo?: boolean;

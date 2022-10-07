@@ -1,4 +1,11 @@
-import { addTasksAC, removeTasksAC, setTasksAC, tasksReducer, updateTaskAC } from './tasks-reducer';
+import {
+  addTasksAC,
+  changeTaskEntityStatusAC,
+  removeTasksAC,
+  setTasksAC,
+  tasksReducer,
+  updateTaskAC,
+} from './tasks-reducer';
 
 import { addTodolistAC, removeTodolistAC, setTodolistAC } from './todolist-reducer';
 import { TaskPriorities, TaskStatuses } from '../../api/todolist-api';
@@ -19,6 +26,7 @@ beforeEach(() => {
         addedDate: '',
         deadline: '',
         startDate: '',
+        entityStatus: 'idle',
       },
       {
         id: '2',
@@ -31,6 +39,7 @@ beforeEach(() => {
         addedDate: '',
         deadline: '',
         startDate: '',
+        entityStatus: 'idle',
       },
       {
         id: '3',
@@ -43,6 +52,7 @@ beforeEach(() => {
         addedDate: '',
         deadline: '',
         startDate: '',
+        entityStatus: 'idle',
       },
     ],
     todoListId2: [
@@ -57,6 +67,7 @@ beforeEach(() => {
         addedDate: '',
         deadline: '',
         startDate: '',
+        entityStatus: 'idle',
       },
       {
         id: '2',
@@ -69,6 +80,7 @@ beforeEach(() => {
         addedDate: '',
         deadline: '',
         startDate: '',
+        entityStatus: 'idle',
       },
       {
         id: '3',
@@ -81,6 +93,7 @@ beforeEach(() => {
         addedDate: '',
         deadline: '',
         startDate: '',
+        entityStatus: 'idle',
       },
     ],
   };
@@ -200,4 +213,12 @@ test('tasks should be added for todolist', () => {
   const endState = tasksReducer({ todoListId1: [], todoListId2: [] }, action);
 
   expect(endState['todoListId2'][0].id).toBe('1');
+});
+test('property entityStatus should be changed', () => {
+  const action: ReturnType<typeof changeTaskEntityStatusAC> = changeTaskEntityStatusAC('todoListId2', '2', 'loading');
+
+  const endState = tasksReducer(startState, action);
+
+  expect(endState['todoListId1'][0].entityStatus).toBe('idle');
+  expect(endState['todoListId2'][1].entityStatus).toBe('loading');
 });

@@ -5,7 +5,7 @@ import EditableSpan from '../../../components/EditableSpan/EditableSpan';
 import { Button, IconButton } from '@mui/material';
 import { Delete } from '@mui/icons-material';
 import Task from './Task/Task';
-import { TaskStatuses, TaskType } from '../../../api/todolist-api';
+import { TaskDomainType, TaskStatuses } from '../../../api/todolist-api';
 import { FilterType, TodoListDomainType } from '../todolist-reducer';
 import { useDispatch } from 'react-redux';
 import { AppThunkType } from '../../../app/store';
@@ -13,7 +13,7 @@ import { fetchTasksTС } from '../tasks-reducer';
 
 type TodoListPropsType = {
   todoList: TodoListDomainType;
-  tasks: Array<TaskType>;
+  tasks: Array<TaskDomainType>;
   removeTasks: (todoListId: string, taskId: string) => void;
   changeFilter: (todoListId: string, filter: FilterType) => void;
   addTask: (todoListId: string, title: string) => void;
@@ -104,18 +104,13 @@ export const TodoList = React.memo(({ demo = false, ...props }: TodoListPropsTyp
       </div>
       <ul>{reactTodolist}</ul>
       <div>
-        <Button
-          variant={props.todoList.filter === 'all' ? 'contained' : 'text'}
-          onClick={onClickHandlerAll}
-          disabled={props.todoList.entityStatus === 'loading'}
-        >
+        <Button variant={props.todoList.filter === 'all' ? 'contained' : 'text'} onClick={onClickHandlerAll}>
           All
         </Button>
         <Button
           variant={props.todoList.filter === 'completed' ? 'contained' : 'text'}
           color="success"
           onClick={onClickHandlerCompleted}
-          disabled={props.todoList.entityStatus === 'loading'}
         >
           Completed
         </Button>
@@ -123,7 +118,6 @@ export const TodoList = React.memo(({ demo = false, ...props }: TodoListPropsTyp
           variant={props.todoList.filter === 'active' ? 'contained' : 'text'}
           color={'secondary'}
           onClick={onClickHandlerActive}
-          disabled={props.todoList.entityStatus === 'loading'}
         >
           Active
         </Button>

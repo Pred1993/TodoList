@@ -1,5 +1,5 @@
 import axios from 'axios';
-import {RequestStatusType} from "../app/app-reducer";
+import { RequestStatusType } from '../app/app-reducer';
 
 const settings = {
   withCredentials: true,
@@ -71,7 +71,7 @@ export enum TaskPriorities {
   Urgently,
   Later,
 }
-// export type TaskDomainType = TaskType & {entityStatus: RequestStatusType;}
+export type TaskDomainType = TaskType & { entityStatus: RequestStatusType };
 export type TaskType = {
   addedDate: string;
   deadline: null | string;

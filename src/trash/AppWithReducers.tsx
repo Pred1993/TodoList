@@ -14,10 +14,10 @@ import {
   todolistsReducer,
 } from '../features/TodolistsList/todolist-reducer';
 import { addTasksAC, removeTasksAC, tasksReducer, updateTaskAC } from '../features/TodolistsList/tasks-reducer';
-import { TaskPriorities, TaskStatuses, TaskType } from '../api/todolist-api';
+import { TaskDomainType, TaskPriorities, TaskStatuses, TaskType } from '../api/todolist-api';
 
 export type TasksStateType = {
-  [key: string]: Array<TaskType>;
+  [key: string]: Array<TaskDomainType>;
 };
 
 function AppWithReducers() {
@@ -41,6 +41,7 @@ function AppWithReducers() {
         addedDate: '',
         deadline: '',
         startDate: '',
+        entityStatus: 'idle',
       },
       {
         id: v1(),
@@ -53,6 +54,7 @@ function AppWithReducers() {
         addedDate: '',
         deadline: '',
         startDate: '',
+        entityStatus: 'idle',
       },
       {
         id: v1(),
@@ -65,6 +67,7 @@ function AppWithReducers() {
         addedDate: '',
         deadline: '',
         startDate: '',
+        entityStatus: 'idle',
       },
     ],
     [todoListId2]: [
@@ -79,6 +82,7 @@ function AppWithReducers() {
         addedDate: '',
         deadline: '',
         startDate: '',
+        entityStatus: 'idle',
       },
       {
         id: v1(),
@@ -91,6 +95,7 @@ function AppWithReducers() {
         addedDate: '',
         deadline: '',
         startDate: '',
+        entityStatus: 'idle',
       },
       {
         id: v1(),
@@ -103,6 +108,7 @@ function AppWithReducers() {
         addedDate: '',
         deadline: '',
         startDate: '',
+        entityStatus: 'idle',
       },
     ],
   });

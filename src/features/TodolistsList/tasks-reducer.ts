@@ -1,10 +1,10 @@
 import { addTodolistAC, removeTodolistAC, setTodolistAC } from './todolist-reducer';
-import { dataUpdateRequestType, tasksAPI, TaskType } from '../../api/todolist-api';
+import { dataUpdateRequestType, TaskDomainType, tasksAPI, TaskType } from '../../api/todolist-api';
 import { Dispatch } from 'redux';
 import { AppRootStateType } from '../../app/store';
 import { TasksStateType } from './TodolistsList';
-import { setAppErrorAC, setAppStatusAC } from '../../app/app-reducer';
-import {handleServerAppError, handleServerNetworkError} from "../../utils/error-utils";
+import { RequestStatusType, setAppErrorAC, setAppStatusAC } from '../../app/app-reducer';
+import { handleServerAppError, handleServerNetworkError } from '../../utils/error-utils';
 
 const initialState: TasksStateType = {
   /*"todolistId1": [
@@ -29,7 +29,7 @@ const initialState: TasksStateType = {
 export const tasksReducer = (state: TasksStateType = initialState, action: ActionTaskType): TasksStateType => {
   switch (action.type) {
     case 'SET-TASKS':
-      return { ...state, [action.todolistId]: action.tasks };
+      return { ...state, [action.todolistId]: action.tasks.map((t) => ({ ...t, entityStatus: 'idle' })) };
     case 'SET-TODOLIST':
       const copyState = { ...state };
       action.todolist.forEach((td) => {
@@ -39,7 +39,8 @@ export const tasksReducer = (state: TasksStateType = initialState, action: Actio
     case 'REMOVE-TASKS':
       return { ...state, [action.todolistId]: state[action.todolistId].filter((st) => st.id !== action.taskId) };
     case 'ADD-TASKS':
-      return { ...state, [action.todolistId]: [action.task, ...state[action.todolistId]] };
+      const newTask: TaskDomainType = { ...action.task, entityStatus: 'idle' };
+      return { ...state, [action.todolistId]: [newTask, ...state[action.todolistId]] };
     case 'UPDATE-TASK':
       return {
         ...state,
@@ -60,6 +61,13 @@ export const tasksReducer = (state: TasksStateType = initialState, action: Actio
       return endState;
     default:
       return state;
+    case 'CHANGE-TASK-ENTITY-STATUS':
+      return {
+        ...state,
+        [action.todolistId]: state[action.todolistId].map((t) =>
+          t.id === action.taskId ? { ...t, entityStatus: action.entityStatus } : t,
+        ),
+      };
   }
 };
 // types
@@ -81,7 +89,8 @@ export type ActionTaskType =
   | ReturnType<typeof setTodolistAC>
   | ReturnType<typeof setTasksAC>
   | ReturnType<typeof setAppErrorAC>
-  | ReturnType<typeof setAppStatusAC>;
+  | ReturnType<typeof setAppStatusAC>
+  | ReturnType<typeof changeTaskEntityStatusAC>;
 
 // actions
 export const removeTasksAC = (todolistId: string, taskId: string) =>
@@ -108,50 +117,70 @@ export const setTasksAC = (todolistId: string, tasks: Array<TaskType>) =>
     tasks,
   } as const);
 
+export const changeTaskEntityStatusAC = (todolistId: string, taskId: string, entityStatus: RequestStatusType) =>
+  ({
+    type: 'CHANGE-TASK-ENTITY-STATUS',
+    todolistId,
+    taskId,
+    entityStatus,
+  } as const);
+
 // thunks
 export const fetchTasksTС = (todolistId: string) => (dispatch: Dispatch<ActionTaskType>) => {
   dispatch(setAppStatusAC('loading'));
-  tasksAPI.getTasks(todolistId).then((response) => {
-    dispatch(setTasksAC(todolistId, response.data.items));
-    dispatch(setAppStatusAC('succeeded'));
-  }).catch((error) => {
-    handleServerNetworkError(error, dispatch)
-  });
+  tasksAPI
+    .getTasks(todolistId)
+    .then((response) => {
+      dispatch(setTasksAC(todolistId, response.data.items));
+      dispatch(setAppStatusAC('succeeded'));
+    })
+    .catch((error) => {
+      handleServerNetworkError(error, dispatch);
+    });
 };
 
 export const deleteTaskTC = (todoListId: string, taskId: string) => (dispatch: Dispatch<ActionTaskType>) => {
-  dispatch(setAppStatusAC('loading'));// для отрисовки загрузки во время связи с сервером (бегущая строка)
+  dispatch(setAppStatusAC('loading')); // для отрисовки загрузки во время связи с сервером (бегущая строка)
+  dispatch(changeTaskEntityStatusAC(todoListId, taskId, 'loading'));
   // Удаление таски
-  tasksAPI.DeleteTasks(todoListId, taskId).then((response) => {
-    if (response.data.resultCode === 0) {const action = removeTasksAC(todoListId, taskId);
-      dispatch(action);
-      dispatch(setAppStatusAC('succeeded'));
-    } else {
-      handleServerAppError(response.data, dispatch)
-    }
-  }).catch((error) => {
-    handleServerNetworkError(error, dispatch)
-  });
+  tasksAPI
+    .DeleteTasks(todoListId, taskId)
+    .then((response) => {
+      if (response.data.resultCode === 0) {
+        const action = removeTasksAC(todoListId, taskId);
+        dispatch(action);
+        dispatch(setAppStatusAC('succeeded'));
+      } else {
+        handleServerAppError(response.data, dispatch);
+      }
+    })
+    .catch((error) => {
+      handleServerNetworkError(error, dispatch);
+    });
 };
 
 export const addTaskTC = (todoListId: string, title: string) => (dispatch: Dispatch<ActionTaskType>) => {
   dispatch(setAppStatusAC('loading'));
-  tasksAPI.CreateTasks(todoListId, title).then((response) => {
-    if (response.data.resultCode === 0) {
-      const action = addTasksAC(todoListId, response.data.data.item);
-      dispatch(action);
-      dispatch(setAppStatusAC('succeeded'));
-    } else {
-      handleServerAppError(response.data, dispatch)
-    }
-  }).catch((error) => {
-    handleServerNetworkError(error, dispatch)
-  });
+  tasksAPI
+    .CreateTasks(todoListId, title)
+    .then((response) => {
+      if (response.data.resultCode === 0) {
+        const action = addTasksAC(todoListId, response.data.data.item);
+        dispatch(action);
+        dispatch(setAppStatusAC('succeeded'));
+      } else {
+        handleServerAppError(response.data, dispatch);
+      }
+    })
+    .catch((error) => {
+      handleServerNetworkError(error, dispatch);
+    });
 };
 
 export const updateTaskTC = (todoListId: string, taskId: string, dataUpdateRequest: dataUpdateDomainRequestType) => {
   return (dispatch: Dispatch<ActionTaskType>, getState: () => AppRootStateType) => {
     dispatch(setAppStatusAC('loading'));
+    dispatch(changeTaskEntityStatusAC(todoListId, taskId, 'loading'));
     const state = getState();
     const task = state.tasks[todoListId].find((t) => t.id === taskId); // дальше идет проверка в случае если таска не найдена
     if (task) {
@@ -164,16 +193,23 @@ export const updateTaskTC = (todoListId: string, taskId: string, dataUpdateReque
         deadline: task.deadline,
         ...dataUpdateRequest,
       };
-      tasksAPI.UpdateTasks(todoListId, taskId, model).then((response) => {
-        if (response.data.resultCode === 0) {const action = updateTaskAC(todoListId, taskId, dataUpdateRequest);
-          dispatch(action);
-          dispatch(setAppStatusAC('succeeded'));
-        } else {
-          handleServerAppError(response.data, dispatch)// обработка ошибок, которая приходит с сервера
-        }
-      }).catch((error) => {
-        handleServerNetworkError(error, dispatch)// обработка ошибок из сети, допустим интернет рассоединился
-      });
+      tasksAPI
+        .UpdateTasks(todoListId, taskId, model)
+        .then((response) => {
+          if (response.data.resultCode === 0) {
+            const action = updateTaskAC(todoListId, taskId, dataUpdateRequest);
+            dispatch(action);
+            dispatch(setAppStatusAC('succeeded'));
+          } else {
+            handleServerAppError(response.data, dispatch); // обработка ошибок, которая приходит с сервера
+          }
+        })
+        .catch((error) => {
+          handleServerNetworkError(error, dispatch); // обработка ошибок из сети, допустим интернет рассоединился
+        })
+        .finally(() => {
+          dispatch(changeTaskEntityStatusAC(todoListId, taskId, 'idle'));
+        });
     }
   };
 };

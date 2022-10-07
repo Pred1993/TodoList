@@ -6,10 +6,10 @@ import AddItemForms from '../components/AddItemForms/AddItemForms';
 import { AppBar, Button, Container, Grid, IconButton, Paper, Toolbar, Typography } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import { FilterType, TodoListDomainType } from '../features/TodolistsList/todolist-reducer';
-import { TaskPriorities, TaskStatuses, TaskType } from '../api/todolist-api';
+import { TaskDomainType, TaskPriorities, TaskStatuses } from '../api/todolist-api';
 
 export type TasksStateType = {
-  [key: string]: Array<TaskType>;
+  [key: string]: Array<TaskDomainType>;
 };
 
 function App1() {
@@ -33,6 +33,7 @@ function App1() {
         addedDate: '',
         deadline: '',
         startDate: '',
+        entityStatus: 'idle',
       },
       {
         id: v1(),
@@ -45,6 +46,7 @@ function App1() {
         addedDate: '',
         deadline: '',
         startDate: '',
+        entityStatus: 'idle',
       },
       {
         id: v1(),
@@ -57,6 +59,7 @@ function App1() {
         addedDate: '',
         deadline: '',
         startDate: '',
+        entityStatus: 'idle',
       },
     ],
     [todoListId2]: [
@@ -71,6 +74,7 @@ function App1() {
         addedDate: '',
         deadline: '',
         startDate: '',
+        entityStatus: 'idle',
       },
       {
         id: v1(),
@@ -83,6 +87,7 @@ function App1() {
         addedDate: '',
         deadline: '',
         startDate: '',
+        entityStatus: 'idle',
       },
       {
         id: v1(),
@@ -95,6 +100,7 @@ function App1() {
         addedDate: '',
         deadline: '',
         startDate: '',
+        entityStatus: 'idle',
       },
     ],
   });
@@ -111,7 +117,7 @@ function App1() {
 
   const addTask = (todoListId: string, title: string) => {
     // Добавление таски
-    const newTask = {
+    const newTask: TaskDomainType = {
       id: v1(),
       title: title,
       status: TaskStatuses.New,
@@ -122,6 +128,7 @@ function App1() {
       addedDate: '',
       deadline: '',
       startDate: '',
+      entityStatus: 'idle',
     };
     setTasks({ ...tasks, [todoListId]: [newTask, ...tasks[todoListId]] });
   };
@@ -136,7 +143,6 @@ function App1() {
       [todoListId]: tasks[todoListId].map((td) => (td.id === taskId ? { ...td, status: status } : td)),
     });
   };
-
   const changeFilter = (todoListId: string, filter: FilterType) => {
     // Изменение значения фильтра в todoLists
     setTodoLists(todoLists.map((td) => (td.id === todoListId ? { ...td, filter: filter } : td)));
