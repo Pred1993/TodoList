@@ -4,6 +4,7 @@ import { Dispatch } from 'redux';
 import { AppRootStateType } from '../../app/store';
 import { TasksStateType } from './TodolistsList';
 import { setAppErrorAC, setAppStatusAC } from '../../app/app-reducer';
+import {handleServerAppError, handleServerNetworkError} from "../../utils/error-utils";
 
 const initialState: TasksStateType = {
   /*"todolistId1": [
@@ -113,16 +114,23 @@ export const fetchTasksTС = (todolistId: string) => (dispatch: Dispatch<ActionT
   tasksAPI.getTasks(todolistId).then((response) => {
     dispatch(setTasksAC(todolistId, response.data.items));
     dispatch(setAppStatusAC('succeeded'));
+  }).catch((error) => {
+    handleServerNetworkError(error, dispatch)
   });
 };
 
 export const deleteTaskTC = (todoListId: string, taskId: string) => (dispatch: Dispatch<ActionTaskType>) => {
-  dispatch(setAppStatusAC('loading'));
+  dispatch(setAppStatusAC('loading'));// для отрисовки загрузки во время связи с сервером (бегущая строка)
   // Удаление таски
   tasksAPI.DeleteTasks(todoListId, taskId).then((response) => {
-    const action = removeTasksAC(todoListId, taskId);
-    dispatch(action);
-    dispatch(setAppStatusAC('succeeded'));
+    if (response.data.resultCode === 0) {const action = removeTasksAC(todoListId, taskId);
+      dispatch(action);
+      dispatch(setAppStatusAC('succeeded'));
+    } else {
+      handleServerAppError(response.data, dispatch)
+    }
+  }).catch((error) => {
+    handleServerNetworkError(error, dispatch)
   });
 };
 
@@ -134,18 +142,15 @@ export const addTaskTC = (todoListId: string, title: string) => (dispatch: Dispa
       dispatch(action);
       dispatch(setAppStatusAC('succeeded'));
     } else {
-      if (response.data.messages.length) {
-        dispatch(setAppErrorAC(response.data.messages[0]));
-      } else {
-        dispatch(setAppErrorAC('Some error occurred'));
-      }
-      dispatch(setAppStatusAC('failed'));
+      handleServerAppError(response.data, dispatch)
     }
+  }).catch((error) => {
+    handleServerNetworkError(error, dispatch)
   });
 };
 
 export const updateTaskTC = (todoListId: string, taskId: string, dataUpdateRequest: dataUpdateDomainRequestType) => {
-  return (dispatch: Dispatch, getState: () => AppRootStateType) => {
+  return (dispatch: Dispatch<ActionTaskType>, getState: () => AppRootStateType) => {
     dispatch(setAppStatusAC('loading'));
     const state = getState();
     const task = state.tasks[todoListId].find((t) => t.id === taskId); // дальше идет проверка в случае если таска не найдена
@@ -160,9 +165,14 @@ export const updateTaskTC = (todoListId: string, taskId: string, dataUpdateReque
         ...dataUpdateRequest,
       };
       tasksAPI.UpdateTasks(todoListId, taskId, model).then((response) => {
-        const action = updateTaskAC(todoListId, taskId, dataUpdateRequest);
-        dispatch(action);
-        dispatch(setAppStatusAC('succeeded'));
+        if (response.data.resultCode === 0) {const action = updateTaskAC(todoListId, taskId, dataUpdateRequest);
+          dispatch(action);
+          dispatch(setAppStatusAC('succeeded'));
+        } else {
+          handleServerAppError(response.data, dispatch)// обработка ошибок, которая приходит с сервера
+        }
+      }).catch((error) => {
+        handleServerNetworkError(error, dispatch)// обработка ошибок из сети, допустим интернет рассоединился
       });
     }
   };

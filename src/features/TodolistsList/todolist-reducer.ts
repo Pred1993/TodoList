@@ -1,6 +1,7 @@
 import { todolistAPI, TodoListType } from '../../api/todolist-api';
 import { Dispatch } from 'redux';
 import { RequestStatusType, setAppStatusAC } from '../../app/app-reducer';
+import {handleServerAppError, handleServerNetworkError} from "../../utils/error-utils";
 
 const initialState: Array<TodoListDomainType> = [
   /*{id: todolistId1, title: 'What to learn', filter: 'all', addedDate: '', order: 0, entityStatus: 'idle'},
@@ -63,6 +64,8 @@ export const fetchTodolistTС = () => (dispatch: Dispatch<ActionTodolistType>) =
   todolistAPI.getTodolist().then((response) => {
     dispatch(setTodolistAC(response.data));
     dispatch(setAppStatusAC('succeeded'));
+  }).catch(error => {
+    handleServerNetworkError(error, dispatch)
   });
 };
 
@@ -70,27 +73,47 @@ export const deleteTodolistTС = (todoListId: string) => (dispatch: Dispatch<Act
   dispatch(setAppStatusAC('loading'));
   dispatch(changeTodolistEntityStatusAC(todoListId, 'loading')); // для задизейбливония кнопки пока идёт ответ с сервера
   todolistAPI.DeleteTodolist(todoListId).then((response) => {
-    const action = removeTodolistAC(todoListId);
-    dispatch(action);
-    dispatch(setAppStatusAC('succeeded'));
+    if (response.data.resultCode === 0) {
+      const action = removeTodolistAC(todoListId);
+      dispatch(action);
+      dispatch(setAppStatusAC('succeeded'));
+    } else {
+      handleServerAppError(response.data, dispatch)
+    }
+  }).catch(error => {
+    handleServerNetworkError(error, dispatch)
   });
 };
 
 export const addTodolistTС = (title: string) => (dispatch: Dispatch<ActionTodolistType>) => {
   dispatch(setAppStatusAC('loading'));
   todolistAPI.CreateTodolist(title).then((response) => {
-    const action = addTodolistAC(response.data.data.item);
-    dispatch(action);
-    dispatch(setAppStatusAC('succeeded'));
+    if(response.data.resultCode === 0) {const action = addTodolistAC(response.data.data.item);
+      dispatch(action);
+      dispatch(setAppStatusAC('succeeded'));
+    } else {
+      handleServerAppError(response.data, dispatch)
+    }
+  }).catch(error => {
+    handleServerNetworkError(error, dispatch)
   });
 };
 
 export const changeTodolistTitleTС =
   (todoListId: string, title: string) => (dispatch: Dispatch<ActionTodolistType>) => {
     dispatch(setAppStatusAC('loading'));
+    dispatch(changeTodolistEntityStatusAC(todoListId, 'loading'));
     todolistAPI.UpdateTodolistTitle(todoListId, title).then((response) => {
-      const action = changeTodolistTitleAC(todoListId, title);
-      dispatch(action);
-      dispatch(setAppStatusAC('succeeded'));
+      if (response.data.resultCode === 0) {
+        const action = changeTodolistTitleAC(todoListId, title);
+        dispatch(action);
+        dispatch(setAppStatusAC('succeeded'));
+      } else {
+        handleServerAppError(response.data, dispatch)
+      }
+    }).catch(error => {
+      handleServerNetworkError(error, dispatch)
+    }).finally(() => {
+      dispatch(changeTodolistEntityStatusAC(todoListId, 'idle'));
     });
   };
