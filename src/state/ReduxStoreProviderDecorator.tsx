@@ -82,6 +82,9 @@ const initialGlobalState = {
     status: 'idle',
     error: null,
   },
+  auth: {
+    isLoggedIn: false
+  }
 };
 
 export const storyBookStore = legacy_createStore(
