@@ -3,17 +3,18 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import * as serviceWorker from './serviceWorker';
 import App from './app/App';
-import { Provider } from 'react-redux';
-import { store } from './app/store';
+import {Provider} from 'react-redux';
+import {store} from './app/store';
 import AppWithReducers from './trash/AppWithReducers';
-import {BrowserRouter} from "react-router-dom";
+import {BrowserRouter} from 'react-router-dom';
+
 const AppWithReducerImport = AppWithReducers;
 ReactDOM.render(
-    <BrowserRouter>
-  <Provider store={store}>
-    <App />
-  </Provider>
-    </BrowserRouter>,
+  <BrowserRouter>
+    <Provider store={store}>
+      <App />
+    </Provider>
+  </BrowserRouter>,
   document.getElementById('root'),
 );
 

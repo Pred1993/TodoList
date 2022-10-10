@@ -1,21 +1,41 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import './App.css';
-import { AppBar, Button, Container, IconButton, LinearProgress, Toolbar, Typography } from '@mui/material';
+import {
+  AppBar,
+  Button,
+  CircularProgress,
+  Container,
+  IconButton,
+  LinearProgress,
+  Toolbar,
+  Typography,
+} from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import TodolistsList from '../features/TodolistsList/TodolistsList';
 import { ErrorSnackbar } from '../components/ErrorSnackbar/ErrorSnackbar';
-import { useSelector } from 'react-redux';
-import { AppRootStateType } from './store';
-import { RequestStatusType } from './app-reducer';
-import {Navigate, Route, Routes} from "react-router-dom";
-import {Login} from "../features/Login/Login";
-
+import { useDispatch, useSelector } from 'react-redux';
+import { AppRootStateType, AppThunkType } from './store';
+import { isInitializedAppTC, RequestStatusType } from './app-reducer';
+import { Navigate, Route, Routes } from 'react-router-dom';
+import { Login } from '../features/Login/Login';
 
 type PropsType = {
   demo?: boolean;
 };
 function App({ demo = false }: PropsType) {
   const status = useSelector<AppRootStateType, RequestStatusType>((state) => state.app.status);
+  const isInitialized = useSelector<AppRootStateType, boolean>((state) => state.app.isInitialized);
+  const dispatch = useDispatch<AppThunkType>();
+  useEffect(() => {
+    dispatch(isInitializedAppTC());
+  }, []);
+  if (!isInitialized) {
+    return (
+      <div style={{ position: 'fixed', top: '30%', width: '100%', textAlign: 'center' }}>
+        <CircularProgress />
+      </div>
+    );
+  }
   return (
     <div className="App">
       <ErrorSnackbar />
@@ -32,12 +52,12 @@ function App({ demo = false }: PropsType) {
         {status === 'loading' && <LinearProgress color="success" />}
       </AppBar>
       <Container fixed>
-          <Routes>
-              <Route path={'/'} element={<TodolistsList demo={demo}/>}/>
-              <Route path={'/login'} element={<Login/>}/>
-              <Route path={'/404'} element={<h1>404: PAGE NOT FOUND</h1>}/>
-              <Route path={'*'} element={<Navigate to={'/404'}/>}/>
-          </Routes>
+        <Routes>
+          <Route path={'/'} element={<TodolistsList demo={demo} />} />
+          <Route path={'/login'} element={<Login />} />
+          <Route path={'/404'} element={<h1>404: PAGE NOT FOUND</h1>} />
+          <Route path={'*'} element={<Navigate to={'/404'} />} />
+        </Routes>
       </Container>
     </div>
   );

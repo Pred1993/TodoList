@@ -3,7 +3,7 @@ import { ActionTodolistType, todolistsReducer } from '../features/TodolistsList/
 import { ActionTaskType, tasksReducer } from '../features/TodolistsList/tasks-reducer';
 import thunk, { ThunkDispatch } from 'redux-thunk';
 import { appReducer } from './app-reducer';
-import {authReducer} from "../features/Login/auth-reducer";
+import { authReducer } from '../features/Login/auth-reducer';
 
 declare global {
   interface Window {
@@ -18,7 +18,7 @@ const rootReducer = combineReducers({
   todolist: todolistsReducer,
   tasks: tasksReducer,
   app: appReducer,
-  auth: authReducer
+  auth: authReducer,
 });
 
 export type AppRootStateType = ReturnType<typeof rootReducer>;
