@@ -30,7 +30,7 @@ export const appReducer = (state: InitialStateType = initialState, action: AppAc
   }
 };
 //types
-type AppActionsType =
+export type AppActionsType =
   | ReturnType<typeof setAppErrorAC>
   | ReturnType<typeof setAppStatusAC>
   | ReturnType<typeof setAppIsInitializedAC>

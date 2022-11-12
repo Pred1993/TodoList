@@ -31,7 +31,7 @@ const TodolistsList = ({ demo = false }: PropsType) => {
   const tasks = useSelector<AppRootStateType, TasksStateType>((state) => state.tasks);
   const isLoggedIn = useSelector<AppRootStateType, boolean>((state) => state.auth.isLoggedIn);
   useEffect(() => {
-    if (demo) {
+    if (demo || !isLoggedIn) {
       return;
     }
     dispatch(fetchTodolistTС());
@@ -101,6 +101,7 @@ const TodolistsList = ({ demo = false }: PropsType) => {
   if (!isLoggedIn) {
     return <Navigate to={'/login'} />;
   }
+
   return (
     <>
       <Grid container style={{ padding: '10px' }}>
