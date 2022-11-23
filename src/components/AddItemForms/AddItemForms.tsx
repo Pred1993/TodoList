@@ -11,11 +11,10 @@ const AddItemForms = React.memo((props: AddItemFormsPropsType) => {
   const [title, setTitle] = useState('');
   const [error, setError] = useState<string | null>(null);
   const onChangeHandlerTitle = (e: ChangeEvent<HTMLInputElement>) => {
-    // Функция-обработчик для изменения title из импута в стейте
+
     setTitle(e.currentTarget.value);
   };
   const onKeyPressHandlerEnter = (e: KeyboardEvent<HTMLInputElement>) => {
-    // Функция-обработчик для вызова callback-функции добавления новых тасок при помощи нажатия клавиши Enter
     if (error !== null) {
       setError(null);
     }
@@ -25,7 +24,6 @@ const AddItemForms = React.memo((props: AddItemFormsPropsType) => {
   };
   //
   const onClickHandlerAddTask = () => {
-    // Функция-обработчик для вызова callback-функции добавления новых тасок
     if (title.trim() === '') {
       setError('Title is required');
       let clearSpace = '';

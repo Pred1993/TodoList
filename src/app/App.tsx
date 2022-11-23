@@ -24,16 +24,20 @@ type PropsType = {
   demo?: boolean;
 };
 function App({ demo = false }: PropsType) {
+
   const status = useSelector<AppRootStateType, RequestStatusType>((state) => state.app.status);
   const isInitialized = useSelector<AppRootStateType, boolean>((state) => state.app.isInitialized);
   const isLoggedIn = useSelector<AppRootStateType, boolean>((state) => state.auth.isLoggedIn);
   const dispatch = useDispatch<AppThunkType>();
+
   useEffect(() => {
     dispatch(isInitializedAppTC());
   }, []);
+
   const logoutHandler = useCallback(() => {
     dispatch(logoutTC())
   }, [dispatch])
+
   if (!isInitialized) {
     return (
       <div style={{ position: 'fixed', top: '30%', width: '100%', textAlign: 'center' }}>

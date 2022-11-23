@@ -1,6 +1,6 @@
-import React, { useCallback, useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { AppRootStateType, AppThunkType } from '../../app/store';
+import React, {useCallback, useEffect} from 'react';
+import {useDispatch, useSelector} from 'react-redux';
+import {AppRootStateType, AppThunkType} from '../../app/store';
 import {
   addTodolistTС,
   changeTodolistFilterAC,
@@ -10,13 +10,13 @@ import {
   FilterType,
   TodoListDomainType,
 } from './todolist-reducer';
-import { addTaskTC, deleteTaskTC, updateTaskTC } from './tasks-reducer';
-import { TaskDomainType, TaskStatuses } from '../../api/todolist-api';
+import {addTaskTC, deleteTaskTC, updateTaskTC} from './tasks-reducer';
+import {TaskDomainType, TaskStatuses} from '../../api/todolist-api';
 
-import { Grid, Paper } from '@mui/material';
+import {Grid, Paper} from '@mui/material';
 import AddItemForms from '../../components/AddItemForms/AddItemForms';
-import { TodoList } from './TodoList/TodoList';
-import { Navigate } from 'react-router-dom';
+import {TodoList} from './TodoList/TodoList';
+import {Navigate} from 'react-router-dom';
 
 export type TasksStateType = {
   [key: string]: Array<TaskDomainType>;
@@ -25,12 +25,13 @@ type PropsType = {
   demo?: boolean;
 };
 
-const TodolistsList = ({ demo = false }: PropsType) => {
+const TodolistsList = ({demo = false}: PropsType) => {
   const dispatch = useDispatch<AppThunkType>();
   const todoLists = useSelector<AppRootStateType, Array<TodoListDomainType>>((state) => state.todolist);
   const tasks = useSelector<AppRootStateType, TasksStateType>((state) => state.tasks);
   const isLoggedIn = useSelector<AppRootStateType, boolean>((state) => state.auth.isLoggedIn);
   useEffect(() => {
+    debugger
     if (demo || !isLoggedIn) {
       return;
     }
@@ -46,7 +47,6 @@ const TodolistsList = ({ demo = false }: PropsType) => {
   );
 
   const removeTasks = useCallback(
-    // Удаление таски
     (todoListId: string, taskId: string) => {
       dispatch(deleteTaskTC(todoListId, taskId));
     },
@@ -55,35 +55,33 @@ const TodolistsList = ({ demo = false }: PropsType) => {
 
   const addTask = useCallback(
     (todoListId: string, title: string) => {
-      // Добавление таски
       dispatch(addTaskTC(todoListId, title));
     },
     [dispatch],
   );
-  // Изменение значения title task за счёт превращения span в input
+
   const changeTaskTitle = useCallback(
     (todoListId: string, taskId: string, title: string) => {
-      dispatch(updateTaskTC(todoListId, taskId, { title: title }));
+      dispatch(updateTaskTC(todoListId, taskId, {title: title}));
     },
     [dispatch],
   );
-  // Изменение чекеда
+
   const changeChecked = useCallback(
     (todoListId: string, taskId: string, status: TaskStatuses) => {
-      dispatch(updateTaskTC(todoListId, taskId, { status: status }));
+      dispatch(updateTaskTC(todoListId, taskId, {status: status}));
     },
     [dispatch],
   );
 
   const changeFilter = useCallback(
     (todoListId: string, filter: FilterType) => {
-      // Изменение значения фильтра в todoLists
       const action = changeTodolistFilterAC(todoListId, filter);
       dispatch(action);
     },
     [dispatch],
   );
-  //Функция изменения title todoList за счёт превращения span в input
+
   const changeTitleTodoList = useCallback(
     (todoListId: string, title: string) => {
       dispatch(changeTodolistTitleTС(todoListId, title));
@@ -91,7 +89,6 @@ const TodolistsList = ({ demo = false }: PropsType) => {
     [dispatch],
   );
 
-  // Создание нового тодолиста
   const addTodoList = useCallback(
     (title: string) => {
       dispatch(addTodolistTС(title));
@@ -99,20 +96,19 @@ const TodolistsList = ({ demo = false }: PropsType) => {
     [dispatch],
   );
   if (!isLoggedIn) {
-    return <Navigate to={'/login'} />;
+    return <Navigate to={'/login'}/>;
   }
 
   return (
     <>
-      <Grid container style={{ padding: '10px' }}>
-        <AddItemForms callBack={addTodoList} />
+      <Grid container style={{padding: '10px'}}>
+        <AddItemForms callBack={addTodoList}/>
       </Grid>
       <Grid container spacing={3}>
         {todoLists.map((td) => {
-          // Отрисовка компонент todoLists по map
           return (
             <Grid key={td.id} item>
-              <Paper key={td.id} style={{ padding: '10px' }}>
+              <Paper key={td.id} style={{padding: '10px'}}>
                 <TodoList
                   todoList={td}
                   key={td.id}

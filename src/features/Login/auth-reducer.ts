@@ -4,7 +4,7 @@ import { setAppStatusAC } from '../../app/app-reducer';
 import { handleServerAppError, handleServerNetworkError } from '../../utils/error-utils';
 
 const initialState = {
-  isLoggedIn: false, // значение для Navigate(залогинены мы или нет)
+  isLoggedIn: false
 };
 export type initialStateType = typeof initialState;
 export const authReducer = (state: initialStateType = initialState, action: AuthActionType) => {

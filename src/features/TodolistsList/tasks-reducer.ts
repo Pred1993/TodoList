@@ -142,7 +142,6 @@ export const fetchTasksTС = (todolistId: string) => (dispatch: Dispatch<ActionT
 export const deleteTaskTC = (todoListId: string, taskId: string) => (dispatch: Dispatch<ActionTaskType>) => {
   dispatch(setAppStatusAC('loading')); // для отрисовки загрузки во время связи с сервером (бегущая строка)
   dispatch(changeTaskEntityStatusAC(todoListId, taskId, 'loading'));
-  // Удаление таски
   tasksAPI
     .DeleteTasks(todoListId, taskId)
     .then((response) => {

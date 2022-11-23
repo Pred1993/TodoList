@@ -32,14 +32,14 @@ export const TodoList = React.memo(({ demo = false, ...props }: TodoListPropsTyp
     dispatch(fetchTasksTС(props.todoList.id));
   }, []);
 
-  let changeTasks = props.tasks; // Фильтрация по новому значению фильтра
+  let changeTasks = props.tasks;
   if (props.todoList.filter === 'completed') {
     changeTasks = props.tasks.filter((t) => t.status === TaskStatuses.Completed);
   }
   if (props.todoList.filter === 'active') {
     changeTasks = props.tasks.filter((t) => t.status === TaskStatuses.New);
   }
-  // Отрисовка тасок методом Map
+
   const reactTodolist = changeTasks.map((t) => {
     return (
       <Task
@@ -54,29 +54,30 @@ export const TodoList = React.memo(({ demo = false, ...props }: TodoListPropsTyp
     );
   });
   //
-  // Функция-обработчик для вызова callback-функций изменения фильтров
+
   const onClickHandlerAll = useCallback(() => {
     props.changeFilter(props.todoList.id, 'all');
   }, [props.changeFilter, props.todoList.id]);
+
   const onClickHandlerCompleted = useCallback(() => {
     props.changeFilter(props.todoList.id, 'completed');
   }, [props.changeFilter, props.todoList.id]);
+
   const onClickHandlerActive = useCallback(() => {
     props.changeFilter(props.todoList.id, 'active');
   }, [props.changeFilter, props.todoList.id]);
 
   const onclickHandlerRemoveTodoList = () => {
-    //Функция-обработчик для вызова callback-функции удаления todoList
     props.removeTodoList(props.todoList.id);
   };
-  // Промежуточная функция добавления тасок
+
   const addTask = useCallback(
     (title: string) => {
       props.addTask(props.todoList.id, title);
     },
     [props.addTask, props.todoList.id],
   );
-  // Промежуточная функция изменения title todoList за счёт превращения span в input
+
   const onChangeTitleTodolistHandler = useCallback(
     (title: string) => {
       props.changeTitleTodoList(props.todoList.id, title);
