@@ -1,15 +1,15 @@
-import React, { useCallback, useEffect } from 'react';
+import React, {useCallback, useEffect} from 'react';
 import '../../../app/App.css';
 import AddItemForms from '../../../components/AddItemForms/AddItemForms';
 import EditableSpan from '../../../components/EditableSpan/EditableSpan';
-import { Button, IconButton } from '@mui/material';
-import { Delete } from '@mui/icons-material';
+import {Button, IconButton} from '@mui/material';
+import {Delete} from '@mui/icons-material';
 import Task from './Task/Task';
-import { TaskDomainType, TaskStatuses } from '../../../api/todolist-api';
-import { FilterType, TodoListDomainType } from '../todolist-reducer';
-import { useDispatch } from 'react-redux';
-import { AppThunkType } from '../../../app/store';
-import { fetchTasksTС } from '../tasks-reducer';
+import {TaskDomainType, TaskStatuses} from '../../../api/todolist-api';
+import {FilterType, TodoListDomainType} from '../todolist-reducer';
+import {useDispatch} from 'react-redux';
+import {AppThunkType} from '../../../app/store';
+import {fetchTasksTС} from '../tasks-reducer';
 
 type TodoListPropsType = {
   todoList: TodoListDomainType;
@@ -23,7 +23,7 @@ type TodoListPropsType = {
   changeTitleTodoList: (todoListId: string, title: string) => void;
   demo?: boolean;
 };
-export const TodoList = React.memo(({ demo = false, ...props }: TodoListPropsType) => {
+export const TodoList = React.memo(({demo = false, ...props}: TodoListPropsType) => {
   const dispatch = useDispatch<AppThunkType>();
   useEffect(() => {
     if (demo) {
@@ -97,11 +97,11 @@ export const TodoList = React.memo(({ demo = false, ...props }: TodoListPropsTyp
           aria-label="delete"
           disabled={props.todoList.entityStatus === 'loading'}
         >
-          <Delete />
+          <Delete/>
         </IconButton>
       </h3>
       <div>
-        <AddItemForms callBack={addTask} disabled={props.todoList.entityStatus === 'loading'} />
+        <AddItemForms callBack={addTask} disabled={props.todoList.entityStatus === 'loading'}/>
       </div>
       <ul>{reactTodolist}</ul>
       <div>
