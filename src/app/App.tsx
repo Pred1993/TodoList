@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect} from 'react';
+import React, {ChangeEvent, useCallback, useEffect, useMemo} from 'react';
 import './App.css';
 import {
   AppBar,
@@ -12,23 +12,23 @@ import {
 } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import TodolistsList from '../features/TodolistsList/TodolistsList';
-import { ErrorSnackbar } from '../components/ErrorSnackbar/ErrorSnackbar';
-import { useDispatch, useSelector } from 'react-redux';
-import { AppRootStateType, AppThunkType } from './store';
-import { isInitializedAppTC, RequestStatusType } from './app-reducer';
-import { Navigate, Route, Routes } from 'react-router-dom';
-import { Login } from '../features/Login/Login';
+import {ErrorSnackbar} from '../components/ErrorSnackbar/ErrorSnackbar';
+import {useDispatch, useSelector} from 'react-redux';
+import {AppRootStateType, AppThunkType} from './store';
+import {isInitializedAppTC, RequestStatusType} from './app-reducer';
+import {Navigate, Route, Routes} from 'react-router-dom';
+import {Login} from '../features/Login/Login';
 import {logoutTC} from "../features/Login/auth-reducer";
 
 type PropsType = {
   demo?: boolean;
 };
 function App({ demo = false }: PropsType) {
-
   const status = useSelector<AppRootStateType, RequestStatusType>((state) => state.app.status);
   const isInitialized = useSelector<AppRootStateType, boolean>((state) => state.app.isInitialized);
   const isLoggedIn = useSelector<AppRootStateType, boolean>((state) => state.auth.isLoggedIn);
   const dispatch = useDispatch<AppThunkType>();
+
 
   useEffect(() => {
     dispatch(isInitializedAppTC());
@@ -45,6 +45,7 @@ function App({ demo = false }: PropsType) {
       </div>
     );
   }
+
   return (
     <div className="App">
       <ErrorSnackbar />

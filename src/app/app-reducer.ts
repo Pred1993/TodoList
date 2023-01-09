@@ -44,7 +44,7 @@ export const isInitializedAppTC = () => (dispatch: Dispatch<AppActionsType>) => 
   debugger
   authAPI.me().then((response) => {
     if (response.data.resultCode === 0) {
-      dispatch(setIsLoggedInAC(true));
+      dispatch(setIsLoggedInAC({isLoggedIn: true}));
     }
   }).finally(() => {
     dispatch(setAppIsInitializedAC(true));

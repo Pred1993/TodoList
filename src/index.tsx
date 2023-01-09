@@ -7,16 +7,22 @@ import {Provider} from 'react-redux';
 import {store} from './app/store';
 import AppWithReducers from './trash/AppWithReducers';
 import {HashRouter} from 'react-router-dom';
+import {DevSupport} from "@react-buddy/ide-toolbox";
+import {ComponentPreviews, useInitial} from "./dev";
 
 
 ReactDOM.render(
-    <Provider store={store}>
-        <HashRouter>
-            <App/>
-        </HashRouter>
-    </Provider>
-    ,
-    document.getElementById('root'),
+  <Provider store={store}>
+    <HashRouter>
+      <DevSupport ComponentPreviews={ComponentPreviews}
+                  useInitialHook={useInitial}
+      >
+        <App/>
+      </DevSupport>
+    </HashRouter>
+  </Provider>
+  ,
+  document.getElementById('root'),
 );
 
 // If you want your app to work offline and load faster, you can change
