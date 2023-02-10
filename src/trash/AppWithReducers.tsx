@@ -1,9 +1,9 @@
-import React, { useReducer } from 'react';
+import React, {useReducer} from 'react';
 import '../app/App.css';
-import { TodoList } from '../features/TodolistsList/TodoList/TodoList';
-import { v1 } from 'uuid';
+import {TodoList} from '../features/TodolistsList/TodoList/TodoList';
+import {v1} from 'uuid';
 import AddItemForms from '../components/AddItemForms/AddItemForms';
-import { AppBar, Button, Container, Grid, IconButton, Paper, Toolbar, Typography } from '@mui/material';
+import {AppBar, Button, Container, Grid, IconButton, Paper, Toolbar, Typography} from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import {
   addTodolistAC,
@@ -13,8 +13,8 @@ import {
   removeTodolistAC,
   todolistsReducer,
 } from '../features/TodolistsList/todolist-reducer';
-import { addTasksAC, removeTasksAC, tasksReducer, updateTaskAC } from '../features/TodolistsList/tasks-reducer';
-import { TaskDomainType, TaskPriorities, TaskStatuses, TaskType } from '../api/todolist-api';
+import {addTasksAC, removeTasksAC, tasksReducer, updateTaskAC} from '../features/TodolistsList/tasks-reducer';
+import {TaskDomainType, TaskPriorities, TaskStatuses} from '../api/todolist-api';
 
 export type TasksStateType = {
   [key: string]: Array<TaskDomainType>;
@@ -24,8 +24,8 @@ function AppWithReducers() {
   const todoListId1 = v1();
   const todoListId2 = v1();
   const [todoLists, dispatchToTodoListsReducer] = useReducer(todolistsReducer, [
-    { id: todoListId1, title: 'What to eat', filter: 'all', addedDate: '', order: 0, entityStatus: 'idle' },
-    { id: todoListId2, title: 'What to learn', filter: 'all', addedDate: '', order: 0, entityStatus: 'idle' },
+    {id: todoListId1, title: 'What to eat', filter: 'all', addedDate: '', order: 0, entityStatus: 'idle'},
+    {id: todoListId2, title: 'What to learn', filter: 'all', addedDate: '', order: 0, entityStatus: 'idle'},
   ]);
 
   const [tasks, dispatchToTasksReducer] = useReducer(tasksReducer, {
@@ -114,7 +114,7 @@ function AppWithReducers() {
   });
   const removeTodoList = (todoListId: string) => {
     // удаление TodoList
-    const action = removeTodolistAC(todoListId);
+    const action = removeTodolistAC({todolistId: todoListId});
     dispatchToTodoListsReducer(action);
     dispatchToTasksReducer(action);
   };
@@ -143,29 +143,29 @@ function AppWithReducers() {
   };
   // Изменение значения title task за счёт превращения span в input
   const changeTaskTitle = (todoListId: string, taskId: string, title: string) => {
-    const action = updateTaskAC(todoListId, taskId, { title });
+    const action = updateTaskAC(todoListId, taskId, {title});
     dispatchToTasksReducer(action);
   };
   // Изменение чекеда
   const changeChecked = (todoListId: string, taskId: string, status: TaskStatuses) => {
-    const action = updateTaskAC(todoListId, taskId, { status });
+    const action = updateTaskAC(todoListId, taskId, {status});
     dispatchToTasksReducer(action);
   };
 
   const changeFilter = (todoListId: string, filter: FilterType) => {
     // Изменение значения фильтра в todoLists
-    const action = changeTodolistFilterAC(todoListId, filter);
+    const action = changeTodolistFilterAC({todolistId: todoListId, filter: filter});
     dispatchToTodoListsReducer(action);
   };
   //Функция изменения title todoList за счёт превращения span в input
   const changeTitleTodoList = (todoListId: string, title: string) => {
-    const action = changeTodolistTitleAC(todoListId, title);
+    const action = changeTodolistTitleAC({todolistId: todoListId, newTodolistTitle: title});
     dispatchToTodoListsReducer(action);
   };
 
   // Создание нового тодолиста
   const addTodoList = (title: string) => {
-    const action = addTodolistAC({ id: 'todoListId3', title: title, addedDate: '', order: 0 });
+    const action = addTodolistAC({todolist: {id: 'todoListId3', title: title, addedDate: '', order: 0}});
     dispatchToTodoListsReducer(action);
     dispatchToTasksReducer(action);
   };
@@ -173,18 +173,18 @@ function AppWithReducers() {
     <div className="App">
       <AppBar position="static">
         <Toolbar>
-          <IconButton size="large" edge="start" color="inherit" aria-label="menu" sx={{ mr: 2 }}>
-            <MenuIcon />
+          <IconButton size="large" edge="start" color="inherit" aria-label="menu" sx={{mr: 2}}>
+            <MenuIcon/>
           </IconButton>
-          <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+          <Typography variant="h6" component="div" sx={{flexGrow: 1}}>
             News
           </Typography>
           <Button color="inherit">Login</Button>
         </Toolbar>
       </AppBar>
       <Container fixed>
-        <Grid container style={{ padding: '10px' }}>
-          <AddItemForms callBack={(title) => addTodoList(title)} />
+        <Grid container style={{padding: '10px'}}>
+          <AddItemForms callBack={(title) => addTodoList(title)}/>
         </Grid>
         <Grid container spacing={3}>
           {todoLists.map((td) => {
@@ -198,7 +198,7 @@ function AppWithReducers() {
             }
             return (
               <Grid item>
-                <Paper style={{ padding: '10px' }}>
+                <Paper style={{padding: '10px'}}>
                   <TodoList
                     todoList={td}
                     key={td.id}

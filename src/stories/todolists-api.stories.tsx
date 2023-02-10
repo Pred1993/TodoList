@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import { tasksAPI, todolistAPI } from '../api/todolist-api';
+import React, {useEffect, useState} from 'react';
+import {tasksAPI, todolistAPI} from '../api/todolist-api';
 
 export default {
   title: 'API',
@@ -12,7 +12,6 @@ export const GetTodolists = () => {
     // который в виде строки будем отображать в div-ке
 
     todolistAPI.getTodolist().then((response) => {
-      debugger;
       setState(response.data);
     });
   }, []);
@@ -26,7 +25,6 @@ export const CreateTodolist = () => {
   // }, [])
   const CreateTodolistHandler = () => {
     todolistAPI.CreateTodolist(title).then((response) => {
-      debugger;
       setState(response.data.data.item);
     });
   };
@@ -53,7 +51,7 @@ export const DeleteTodolist = () => {
   // }, [])
   const DeleteTodolistHandler = () => {
     todolistAPI.DeleteTodolist(todolistId).then((response) => {
-      debugger;
+
       setState(response.data.data);
     });
   };
@@ -80,10 +78,11 @@ export const UpdateTodolistTitle = () => {
   const [todolistId, setTodolistId] = useState<any>('6d4e1092-e567-460c-99a4-40a4e4336501');
   const [title, setTitle] = useState<any>('Avram');
 
-  useEffect(() => {}, []);
+  useEffect(() => {
+  }, []);
   const UpdateTodolistTitleHandler = () => {
     todolistAPI.UpdateTodolistTitle(todolistId, title).then((response) => {
-      debugger;
+
       setState(response.data.data);
     });
   };
@@ -124,7 +123,6 @@ export const GetTasks = () => {
   // }, [])
   const GetTasksHandler = () => {
     tasksAPI.getTasks(todolistId).then((response) => {
-      debugger;
       setState(response.data);
     });
   };
@@ -154,7 +152,7 @@ export const CreateTasks = () => {
   }, []);
   const CreateTasksHandler = () => {
     tasksAPI.CreateTasks(todolistId, taskTitle).then((response) => {
-      debugger;
+
       setState(response.data);
     });
   };
@@ -197,7 +195,7 @@ export const DeleteTasks = () => {
   const DeleteTasksHandler = () => {
     const todolistId = '5deacba5-7b31-4549-bb5b-927510436421';
     tasksAPI.DeleteTasks(todolistId, taskId).then((response) => {
-      debugger;
+
       setState(response.data);
     });
   };
@@ -246,7 +244,6 @@ export const UpdateTasks = () => {
   }, []);
   const UpdateTasksHandler = () => {
     tasksAPI.UpdateTasks(todolistId, taskId, dataUpdateRequest).then((response) => {
-      debugger;
       setState(response.data);
     });
   };

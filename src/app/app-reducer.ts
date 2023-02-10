@@ -1,6 +1,7 @@
 import { Dispatch } from 'redux';
 import { authAPI } from '../api/todolist-api';
 import { setIsLoggedInAC } from '../features/Login/auth-reducer';
+import {createSlice, PayloadAction} from "@reduxjs/toolkit";
 
 export type RequestStatusType = 'idle' | 'loading' | 'succeeded' | 'failed';
 
@@ -12,18 +13,24 @@ const initialState = {
 
 export type InitialStateType = typeof initialState;
 
-export const appReducer = (state: InitialStateType = initialState, action: AppActionsType): InitialStateType => {
-  switch (action.type) {
-    case 'APP/SET-STATUS':
-      return { ...state, status: action.status };
-    case 'APP/SET-ERROR':
-      return { ...state, error: action.error };
-    case 'APP/SET-INITIALIZED':
-      return { ...state, isInitialized: action.isInitialized };
-    default:
-      return state;
+const slice = createSlice({
+  name: 'app',
+  initialState: initialState,
+  reducers: {
+    setAppStatusAC(state, action: PayloadAction<{status: RequestStatusType}>) {
+      state.status = action.payload.status
+    },
+    setAppErrorAC(state, action: PayloadAction<{error: string | null}>) {
+      state.error = action.payload.error
+    },
+    setAppIsInitializedAC(state, action: PayloadAction<{isInitialized: boolean}>) {
+      state.isInitialized = action.payload.isInitialized
+    },
   }
-};
+})
+
+export const appReducer = slice.reducer
+
 //types
 export type AppActionsType =
   | ReturnType<typeof setAppErrorAC>
@@ -32,21 +39,15 @@ export type AppActionsType =
   | ReturnType<typeof setIsLoggedInAC>;
 
 // action
-export const setAppErrorAC = (error: string | null) => ({ type: 'APP/SET-ERROR', error } as const);
-
-export const setAppStatusAC = (status: RequestStatusType) => ({ type: 'APP/SET-STATUS', status } as const);
-
-export const setAppIsInitializedAC = (isInitialized: boolean) =>
-  ({ type: 'APP/SET-INITIALIZED', isInitialized } as const);
+export const {setAppErrorAC, setAppIsInitializedAC, setAppStatusAC} = slice.actions
 
 // thunk
 export const isInitializedAppTC = () => (dispatch: Dispatch<AppActionsType>) => {
-  debugger
   authAPI.me().then((response) => {
     if (response.data.resultCode === 0) {
       dispatch(setIsLoggedInAC({isLoggedIn: true}));
     }
   }).finally(() => {
-    dispatch(setAppIsInitializedAC(true));
+    dispatch(setAppIsInitializedAC({isInitialized: true}));
   });
 };

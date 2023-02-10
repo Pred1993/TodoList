@@ -31,7 +31,6 @@ const TodolistsList = ({demo = false}: PropsType) => {
   const tasks = useSelector<AppRootStateType, TasksStateType>((state) => state.tasks);
   const isLoggedIn = useSelector<AppRootStateType, boolean>((state) => state.auth.isLoggedIn);
   useEffect(() => {
-    debugger
     if (demo || !isLoggedIn) {
       return;
     }
@@ -76,7 +75,7 @@ const TodolistsList = ({demo = false}: PropsType) => {
 
   const changeFilter = useCallback(
     (todoListId: string, filter: FilterType) => {
-      const action = changeTodolistFilterAC(todoListId, filter);
+      const action = changeTodolistFilterAC({todolistId: todoListId, filter: filter});
       dispatch(action);
     },
     [dispatch],
