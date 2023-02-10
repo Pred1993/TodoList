@@ -23,7 +23,7 @@ export const authReducer = slice.reducer
 export const {setIsLoggedInAC} = slice.actions
 
 // thunk
-export const loginTC = (data: LoginParamsType) => (dispatch: Dispatch<AuthActionType>) => {
+export const loginTC = (data: LoginParamsType) => (dispatch: Dispatch) => {
   dispatch(setAppStatusAC({status: 'loading'}));
   authAPI
     .login(data)
@@ -40,7 +40,7 @@ export const loginTC = (data: LoginParamsType) => (dispatch: Dispatch<AuthAction
     });
 };
 
-export const logoutTC = () => (dispatch: Dispatch<AuthActionType>) => {
+export const logoutTC = () => (dispatch: Dispatch) => {
     dispatch(setAppStatusAC({status: 'loading'}))
     authAPI.logout()
         .then(res => {
@@ -57,5 +57,4 @@ export const logoutTC = () => (dispatch: Dispatch<AuthActionType>) => {
 }
 
 // type
-export type AuthActionType = ReturnType<typeof setIsLoggedInAC> | ReturnType<typeof setAppStatusAC>;
 export type initialStateType = typeof initialState;

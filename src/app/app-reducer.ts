@@ -3,15 +3,11 @@ import { authAPI } from '../api/todolist-api';
 import { setIsLoggedInAC } from '../features/Login/auth-reducer';
 import {createSlice, PayloadAction} from "@reduxjs/toolkit";
 
-export type RequestStatusType = 'idle' | 'loading' | 'succeeded' | 'failed';
-
 const initialState = {
   status: 'idle' as RequestStatusType,
   error: null as string | null,
   isInitialized: false,
 };
-
-export type InitialStateType = typeof initialState;
 
 const slice = createSlice({
   name: 'app',
@@ -32,17 +28,13 @@ const slice = createSlice({
 export const appReducer = slice.reducer
 
 //types
-export type AppActionsType =
-  | ReturnType<typeof setAppErrorAC>
-  | ReturnType<typeof setAppStatusAC>
-  | ReturnType<typeof setAppIsInitializedAC>
-  | ReturnType<typeof setIsLoggedInAC>;
-
+export type RequestStatusType = 'idle' | 'loading' | 'succeeded' | 'failed';
+export type InitialStateType = typeof initialState;
 // action
 export const {setAppErrorAC, setAppIsInitializedAC, setAppStatusAC} = slice.actions
 
 // thunk
-export const isInitializedAppTC = () => (dispatch: Dispatch<AppActionsType>) => {
+export const isInitializedAppTC = () => (dispatch: Dispatch) => {
   authAPI.me().then((response) => {
     if (response.data.resultCode === 0) {
       dispatch(setIsLoggedInAC({isLoggedIn: true}));

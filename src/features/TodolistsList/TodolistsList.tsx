@@ -1,6 +1,6 @@
 import React, {useCallback, useEffect} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
-import {AppRootStateType, AppThunkType} from '../../app/store';
+import {AppRootStateType} from '../../app/store';
 import {
   addTodolistTС,
   changeTodolistFilterAC,
@@ -18,6 +18,7 @@ import AddItemForms from '../../components/AddItemForms/AddItemForms';
 import {TodoList} from './TodoList/TodoList';
 import {Navigate} from 'react-router-dom';
 
+
 export type TasksStateType = {
   [key: string]: Array<TaskDomainType>;
 };
@@ -26,7 +27,7 @@ type PropsType = {
 };
 
 const TodolistsList = ({demo = false}: PropsType) => {
-  const dispatch = useDispatch<AppThunkType>();
+  const dispatch = useDispatch<any>();
   const todoLists = useSelector<AppRootStateType, Array<TodoListDomainType>>((state) => state.todolist);
   const tasks = useSelector<AppRootStateType, TasksStateType>((state) => state.tasks);
   const isLoggedIn = useSelector<AppRootStateType, boolean>((state) => state.auth.isLoggedIn);

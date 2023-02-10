@@ -10,7 +10,7 @@ import Button from '@mui/material/Button';
 import { useFormik } from 'formik';
 import { loginTC } from './auth-reducer';
 import { useDispatch, useSelector } from 'react-redux';
-import { AppRootStateType, AppThunkType } from '../../app/store';
+import { AppRootStateType} from '../../app/store';
 import { Navigate } from 'react-router-dom';
 
 type FormikErrorType = {
@@ -19,7 +19,7 @@ type FormikErrorType = {
   rememberMe?: boolean;
 };
 export const Login = () => {
-  const dispatch = useDispatch<AppThunkType>();
+  const dispatch = useDispatch<any>();
   const isLoggedIn = useSelector<AppRootStateType, boolean>((state) => state.auth.isLoggedIn);
   const formik = useFormik({
     initialValues: {

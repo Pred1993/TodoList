@@ -121,34 +121,36 @@ function AppWithReducers() {
 
   const removeTasks = (todoListId: string, taskId: string) => {
     // Удаление таски
-    const action = removeTasksAC(todoListId, taskId);
+    const action = removeTasksAC({taskId: taskId, todolistId: todoListId});
     dispatchToTasksReducer(action);
   };
 
   const addTask = (todoListId: string, title: string) => {
     // Добавление таски
-    const action = addTasksAC(todoListId, {
-      id: '1',
-      title: title,
-      status: TaskStatuses.Completed,
-      todoListId: todoListId,
-      description: '',
-      order: 0,
-      priority: TaskPriorities.Low,
-      addedDate: '',
-      deadline: '',
-      startDate: '',
+    const action = addTasksAC({
+      todolistId: todoListId, task: {
+        id: '1',
+        title: title,
+        status: TaskStatuses.Completed,
+        todoListId: todoListId,
+        description: '',
+        order: 0,
+        priority: TaskPriorities.Low,
+        addedDate: '',
+        deadline: '',
+        startDate: '',
+      }
     });
     dispatchToTasksReducer(action);
   };
   // Изменение значения title task за счёт превращения span в input
   const changeTaskTitle = (todoListId: string, taskId: string, title: string) => {
-    const action = updateTaskAC(todoListId, taskId, {title});
+    const action = updateTaskAC({todolistId: todoListId, taskId: taskId, dataUpdateRequest: {title}});
     dispatchToTasksReducer(action);
   };
   // Изменение чекеда
   const changeChecked = (todoListId: string, taskId: string, status: TaskStatuses) => {
-    const action = updateTaskAC(todoListId, taskId, {status});
+    const action = updateTaskAC({taskId: taskId, todolistId: todoListId, dataUpdateRequest: {status}});
     dispatchToTasksReducer(action);
   };
 
@@ -222,3 +224,4 @@ function AppWithReducers() {
 }
 
 export default AppWithReducers;
+

@@ -55,14 +55,6 @@ export type TodoListDomainType = TodoListType & {
   filter: FilterType;
   entityStatus: RequestStatusType;
 };
-export type ActionTodolistType =
-  | ReturnType<typeof removeTodolistAC>
-  | ReturnType<typeof addTodolistAC>
-  | ReturnType<typeof changeTodolistTitleAC>
-  | ReturnType<typeof changeTodolistFilterAC>
-  | ReturnType<typeof setTodolistAC>
-  | ReturnType<typeof setAppStatusAC>
-  | ReturnType<typeof changeTodolistEntityStatusAC>;
 
 // actions
 export const {
@@ -75,7 +67,7 @@ export const {
 } = slice.actions
 
 // thunks
-export const fetchTodolistTС = () => (dispatch: Dispatch<ActionTodolistType>) => {
+export const fetchTodolistTС = () => (dispatch: Dispatch) => {
   dispatch(setAppStatusAC({status: "loading"})); // для отрисовки загрузки во время связи с сервером (бегущая строка)
   todolistAPI
     .getTodolist()
@@ -88,7 +80,7 @@ export const fetchTodolistTС = () => (dispatch: Dispatch<ActionTodolistType>) =
     });
 };
 
-export const deleteTodolistTС = (todoListId: string) => (dispatch: Dispatch<ActionTodolistType>) => {
+export const deleteTodolistTС = (todoListId: string) => (dispatch: Dispatch) => {
   dispatch(setAppStatusAC({status: "loading"}));
   dispatch(changeTodolistEntityStatusAC({todolistId: todoListId, entityStatus: 'loading'},)); // для задизейбливония кнопки пока идёт ответ с сервера
   todolistAPI
@@ -107,7 +99,7 @@ export const deleteTodolistTС = (todoListId: string) => (dispatch: Dispatch<Act
     });
 };
 
-export const addTodolistTС = (title: string) => (dispatch: Dispatch<ActionTodolistType>) => {
+export const addTodolistTС = (title: string) => (dispatch: Dispatch) => {
   dispatch(setAppStatusAC({status: "loading"}));
   todolistAPI
     .CreateTodolist(title)
@@ -126,7 +118,7 @@ export const addTodolistTС = (title: string) => (dispatch: Dispatch<ActionTodol
 };
 
 export const changeTodolistTitleTС =
-  (todoListId: string, title: string) => (dispatch: Dispatch<ActionTodolistType>) => {
+  (todoListId: string, title: string) => (dispatch: Dispatch) => {
     dispatch(setAppStatusAC({status: "loading"}));
     dispatch(changeTodolistEntityStatusAC({todolistId: todoListId, entityStatus: 'loading'}));
     todolistAPI
